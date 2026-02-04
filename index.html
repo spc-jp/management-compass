@@ -1,0 +1,903 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>経営コンパス Pro｜診断士・経営者向け思考整理</title>
+  <!-- 
+     Original concept by User
+     Refined for SME Consultants (中小企業診断士)
+     Theme: Premium Glass (Aurora Gradient)
+  -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    :root{
+      /* プレミアム・グラス・テーマ */
+      --text-main: #1e293b;      /* 濃いネイビーグレー */
+      --text-muted: #475569;     /* 落ち着いたグレー */
+      
+      --accent: #2563eb;         /* 知的なロイヤルブルー */
+      --accent-hover: #1d4ed8;
+      
+      --glass-bg: rgba(255, 255, 255, 0.75); /* グラス効果のベース */
+      --glass-border: rgba(255, 255, 255, 0.6); /* ガラスの縁 */
+      --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15); /* 高級感のある影 */
+      
+      --ai-color: #7c3aed;       /* 高貴な紫 */
+      --danger: #ef4444;         /* 赤 */
+      
+      --input-bg: rgba(255, 255, 255, 0.6); /* 入力欄も半透明 */
+    }
+
+    body{
+      margin:0; color:var(--text-main);
+      font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
+      /* オーロラグラデーション背景 */
+      background-color: #f3f4f6;
+      background-image: 
+        radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
+        radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
+        radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
+      background: 
+        radial-gradient(at 0% 0%, rgba(199, 210, 254, 0.5) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, rgba(221, 214, 254, 0.5) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, rgba(186, 230, 253, 0.5) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, rgba(254, 202, 202, 0.2) 0px, transparent 50%),
+        #f8fafc; /* ベースカラー */
+      background-attachment: fixed;
+      min-height:100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+    .wrap{max-width:1200px; margin:0 auto; padding:24px 20px 60px;}
+    
+    /* Header Area (Glass) */
+    .top{
+      background: var(--glass-bg);
+      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border);
+      border-radius:16px; padding:20px 28px;
+      display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap;
+      box-shadow: var(--glass-shadow);
+      margin-bottom: 24px;
+    }
+    .ttl-area h1{
+      margin:0; font-size:22px; letter-spacing:.03em; font-weight:700; color:#1e293b;
+      display: flex; align-items: center; gap: 10px;
+      text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+    }
+    .ttl-area h1 i { 
+      color: var(--accent); 
+      background: -webkit-linear-gradient(45deg, #2563eb, #7c3aed);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .ttl-area p{margin:4px 0 0; color:var(--text-muted); font-size:13px; font-weight:500;}
+    .rightTop{display:flex; gap:10px; flex-wrap:wrap;}
+
+    /* Tabs */
+    .tabs{
+      display:flex; gap:8px; overflow-x:auto; padding-bottom:8px;
+      margin-bottom: 20px;
+      padding-left: 4px; /* scroll padding */
+    }
+    .tabs::-webkit-scrollbar{height:4px;}
+    .tabs::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.1); border-radius:2px;}
+    
+    .tab{
+      cursor:pointer; white-space:nowrap;
+      background: rgba(255, 255, 255, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.4);
+      color:var(--text-muted);
+      padding:10px 20px; border-radius:30px; /* Pill shape */
+      font-size:14px; font-weight:600; transition:all 0.3s;
+      display: flex; align-items: center; gap: 8px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    }
+    .tab:hover{
+      background: rgba(255, 255, 255, 0.8); 
+      transform: translateY(-1px);
+      color: var(--accent);
+    }
+    .tab.active{
+      background: linear-gradient(135deg, var(--accent), #4f46e5);
+      border-color: transparent;
+      color:#fff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+    }
+    .tab i { font-size: 1.1em; }
+
+    /* Main Panel */
+    .panel{
+      animation: fadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
+
+    .grid{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
+    @media (max-width:900px){ .grid{grid-template-columns:1fr;} }
+
+    /* Card (Glass) */
+    .card{
+      background: var(--glass-bg);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border);
+      border-radius:16px; padding:28px;
+      box-shadow: var(--glass-shadow);
+      display:flex; flex-direction:column;
+      position: relative;
+      overflow: hidden;
+    }
+    /* Subtle gloss reflection on top */
+    .card::before {
+      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+    }
+
+    .card-header{
+      display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;
+      padding-bottom: 16px; border-bottom: 1px solid rgba(0,0,0,0.06);
+    }
+    .cardTitle{
+      margin:0; font-size:17px; font-weight:700; color:var(--text-main);
+      display:flex; align-items:center; gap:10px;
+    }
+    .cardTitle i { color: #64748b; }
+    
+    /* Forms */
+    .field-wrapper { margin-bottom: 24px; }
+    label{
+      display:block; font-size:13px; color:#334155; 
+      margin:0 0 8px; font-weight:700;
+      letter-spacing: 0.02em;
+    }
+    .field-desc{
+      font-size:12px; color:#64748b; margin-bottom:10px; display:block; line-height: 1.5;
+    }
+    
+    input, textarea{
+      width:100%; box-sizing:border-box;
+      background: var(--input-bg);
+      border:1px solid rgba(0,0,0,0.1);
+      color:var(--text-main); border-radius:8px;
+      padding:14px 16px; font-size:15px;
+      outline:none; transition:all 0.3s;
+      font-family:inherit;
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+    }
+    input:focus, textarea:focus{
+      border-color:var(--accent); background:#fff; 
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    input::placeholder, textarea::placeholder { color: #94a3b8; }
+    textarea{min-height:130px; resize:vertical; line-height:1.7;}
+
+    /* Output/Preview Area */
+    .out-wrap{flex:1; display:flex; flex-direction:column;}
+    .out{
+      flex:1; white-space:pre-wrap;
+      background: #ffffff; 
+      border: 1px solid rgba(0,0,0,0.05);
+      color: #334155;
+      border-radius:8px;
+      padding:28px;
+      font-size:14px; line-height:1.9;
+      overflow-y:auto; max-height:600px;
+      /* Paper shadow */
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    /* Buttons */
+    .btns{display:flex; gap:12px; flex-wrap:wrap; margin-top:24px;}
+    button{
+      border:1px solid rgba(0,0,0,0.1);
+      background: rgba(255,255,255,0.8);
+      color:#475569;
+      padding:11px 20px;
+      border-radius:8px;
+      cursor:pointer;
+      font-size:13px; font-weight:700;
+      display:inline-flex; align-items:center; gap:8px;
+      transition:all 0.2s;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+    }
+    button:hover{
+      background:#fff; color:#1e293b; 
+      transform: translateY(-1px);
+      box-shadow: 0 4px 8px rgba(0,0,0,0.06);
+    }
+    button:active{transform:translateY(0); box-shadow:none;}
+    
+    button.primary{
+      background: linear-gradient(135deg, var(--accent), #3b82f6);
+      border:none; color:#fff;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
+    }
+    button.primary:hover{
+      background: linear-gradient(135deg, #1d4ed8, #2563eb);
+      color:#fff;
+      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
+    }
+    
+    button.ai-btn{
+      background: linear-gradient(135deg, #7c3aed, #9333ea);
+      border:none; color:#fff;
+      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
+    }
+    button.ai-btn:hover{
+      background: linear-gradient(135deg, #6d28d9, #7c3aed);
+      color:#fff;
+    }
+
+    button.danger{border-color: #fecaca; color:var(--danger); background: #fff5f5;}
+    button.danger:hover{background:#fee2e2; color:#b91c1c;}
+
+    /* Modal Styles */
+    .modal-overlay {
+      display: none;
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+      z-index: 9999;
+      justify-content: center; align-items: center;
+      opacity: 0; transition: opacity 0.3s ease;
+    }
+    .modal-overlay.open {
+      display: flex; opacity: 1;
+    }
+    .modal-content {
+      background: rgba(255, 255, 255, 0.95);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      width: 90%; max-width: 600px;
+      border-radius: 16px;
+      padding: 32px;
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+      position: relative;
+      transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+    .modal-overlay.open .modal-content {
+      transform: translateY(0);
+    }
+    .modal-close {
+      position: absolute; top: 16px; right: 20px;
+      font-size: 24px; color: #94a3b8; cursor: pointer;
+      background: none; border: none; padding: 0; box-shadow: none;
+    }
+    .modal-close:hover { background: none; color: var(--danger); box-shadow: none; transform: none; }
+    
+    .modal-title {
+      font-size: 20px; font-weight: 700; color: var(--text-main);
+      margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .modal-body p { margin: 0 0 16px; font-size: 14px; line-height: 1.7; color: var(--text-muted); }
+    
+    .usage-steps {
+      background: #f8fafc; border-radius: 12px; padding: 20px; margin-top: 16px;
+      border: 1px solid #f1f5f9;
+    }
+    .step-item {
+      display: flex; gap: 14px; margin-bottom: 16px;
+    }
+    .step-item:last-child { margin-bottom: 0; }
+    .step-num {
+      background: var(--accent); color: #fff; width: 28px; height: 28px;
+      border-radius: 50%; display: flex; align-items: center; justify-content: center;
+      font-size: 14px; font-weight: bold; flex-shrink: 0; margin-top: 2px;
+      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
+    }
+    .step-text h4 { margin: 0 0 4px; font-size: 15px; color: var(--text-main); }
+    .step-text p { margin: 0; font-size: 13px; color: var(--text-muted); }
+
+    /* Utility */
+    .status{
+      font-size:13px; color:var(--accent); margin-top:16px; height:1.6em; font-weight:600;
+      display:flex; align-items:center; gap:8px;
+    }
+    .footer{
+      margin-top:40px; text-align:center;
+      color:#94a3b8; font-size:12px; font-weight:500;
+    }
+    .json-area{
+      margin-top:30px; border-top:1px dashed rgba(0,0,0,0.1); padding-top:20px;
+    }
+    .jsonBox{
+      min-height:80px; font-family:monospace; font-size:12px; 
+      background: #f8fafc; color: #64748b;
+      border: 1px solid rgba(0,0,0,0.05);
+    }
+
+    /* --- PRINT STYLES --- */
+    @media print {
+      body{background:#fff; color:#000; -webkit-print-color-adjust: exact; background-image: none;}
+      .top, .tabs, #leftCard, .btns, .json-area, .footer, .rightTop button {display:none !important;}
+      .wrap{max-width:100%; padding:0; margin:0;}
+      .panel{margin:0; border:none; background:none; animation:none;}
+      .grid{display:block;}
+      .card{
+        border:none; background:none; padding:0; box-shadow:none; 
+        backdrop-filter:none; border-radius:0;
+      }
+      .card-header{border-bottom:none; margin-bottom:10px;}
+      .cardTitle{color:#000; font-size:18px;}
+      .out{
+        border:none; padding:0; margin:0; 
+        color:#000; background:transparent; 
+        box-shadow:none; max-height:none;
+        font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
+      }
+      #preview::before {
+        content: "経営コンパス レポート";
+        display:block; font-size:24px; font-weight:bold; margin-bottom:20px; border-bottom:2px solid #000; padding-bottom:10px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="wrap">
+  <!-- Header -->
+  <div class="top">
+    <div class="ttl-area">
+      <h1><i class="fa-solid fa-compass"></i> 経営コンパス Pro</h1>
+      <p>診断士・経営者のための思考整理 & AI共創ツール</p>
+    </div>
+    <div class="rightTop">
+      <button id="btnUsage"><i class="fa-solid fa-circle-question"></i> 使い方</button>
+      <button onclick="window.print()"><i class="fa-solid fa-print"></i> 印刷/PDF</button>
+      <button class="primary" id="btnSaveAll"><i class="fa-solid fa-save"></i> 全保存</button>
+      <button id="btnLoadAll"><i class="fa-solid fa-rotate-right"></i> 全読込</button>
+      <button id="btnExportAll"><i class="fa-solid fa-file-export"></i> JSON出力</button>
+    </div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="tabs" id="tabs"></div>
+
+  <!-- Main Area -->
+  <div class="panel" id="panel">
+    <div class="grid">
+      
+      <!-- Input Column -->
+      <div class="card" id="leftCard">
+        <div class="card-header">
+          <p class="cardTitle"><i class="fa-solid fa-pen-to-square"></i> <span id="leftTitle">入力</span></p>
+          <button class="danger" id="btnClearTab" style="padding:6px 12px; font-size:11px;">クリア</button>
+        </div>
+        <div id="formArea"></div>
+        
+        <div class="btns">
+          <button class="primary" id="btnSaveTab">一時保存</button>
+          <button class="ai-btn" id="btnGenAiPrompt"><i class="fa-solid fa-robot"></i> AI分析プロンプト作成</button>
+        </div>
+        <div class="status" id="status"></div>
+      </div>
+
+      <!-- Preview Column -->
+      <div class="card" id="rightCard">
+        <div class="card-header">
+          <p class="cardTitle"><i class="fa-solid fa-file-lines"></i> <span id="rightTitle">プレビュー</span></p>
+          <button id="btnCopyText" style="padding:6px 12px; font-size:11px;"><i class="fa-regular fa-copy"></i> テキストコピー</button>
+        </div>
+        
+        <div class="out-wrap">
+          <div class="out" id="preview"></div>
+        </div>
+
+        <!-- Import Area -->
+        <div class="json-area">
+          <label style="margin-bottom:8px;"><i class="fa-solid fa-code"></i> データ復元（JSON貼付）</label>
+          <textarea id="jsonImport" class="jsonBox" placeholder='書き出したJSONデータをここに貼り付けて「復元」を押してください'></textarea>
+          <div class="btns">
+            <button id="btnImportJson">復元実行</button>
+            <button id="btnCopyJson">JSONをコピー</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="footer">
+    <p>Tips: 「AI分析プロンプト作成」を押すと、入力内容を元にChatGPT等への指示文を生成してクリップボードにコピーします。</p>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="usageModal">
+  <div class="modal-content">
+    <button class="modal-close" id="btnCloseModal"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-title"><i class="fa-solid fa-compass"></i> 経営コンパス Pro の使い方</div>
+    <div class="modal-body">
+      <p>
+        このアプリは、経営者や診断士の頭の中にある<strong>「想い」や「戦略」を整理</strong>し、
+        AI（ChatGPTなど）を活用して<strong>爆速で資料化</strong>するためのツールです。
+      </p>
+      
+      <div class="usage-steps">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-text">
+            <h4>入力する</h4>
+            <p>画面上のタブ（想い・SWOT・3Cなど）を選び、左側の質問に答える形式でメモを入力します。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-text">
+            <h4>AIで深掘りする</h4>
+            <p>「AI分析プロンプト作成」ボタンを押して、ChatGPT等に貼り付けてください。プロの視点で分析・整理してくれます。</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-text">
+            <h4>保存・出力する</h4>
+            <p>右側のプレビューを確認し、「印刷/PDF」で資料として保存したり、テキストをコピーして提案書に使えます。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+(() => {
+  const APP_KEY_ALL = "keieiCompassPro_v2";
+
+  // --- 定義：タブとフィールド ---
+  // SME Diagnostician (中小企業診断士) 向けの視点でフィールドを微調整
+  const TAB_DEFS = [
+    {
+      id: "omoi",
+      name: "01 想い・原点",
+      icon: "fa-heart",
+      leftTitle: "社長の想い・原点",
+      rightTitle: "ヒアリングシート",
+      fields: [
+        {k:"company", t:"企業名・屋号", type:"input", ph:"例：株式会社〇〇製作所"},
+        {k:"owner", t:"代表者名", type:"input", ph:"例：山田 太郎"},
+        {k:"history", t:"創業の経緯・歴史", type:"textarea", ph:"例：先代の急逝で突然継ぐことになり、当初は資金繰りに苦労したが…／元々エンジニアだったが、既存製品への不満から「もっと良いものを」と自分で作ったのが始まり…"},
+        {k:"strength", t:"こだわり・強み（ご自身の言葉で）", type:"textarea", ph:"例：大手にはできない小回りの利く対応／職歴30年のベテランによる手作業の仕上げ／「NOと言わない」現場力／地域密着で顔の見える関係性…"},
+        {k:"customer_voice", t:"顧客から言われて嬉しかった言葉", type:"textarea", ph:"例：「〇〇さんに頼めば安心だ」「他で断られたけど、ここなら何とかしてくれた」「急な納期だったけど助かったよ」「孫の代までよろしく」…"},
+        {k:"vision_raw", t:"将来の夢・ありたい姿（漠然としていてOK）", type:"textarea", ph:"例：地元で一番愛される店になりたい／従業員が家を買えるくらい給料を上げたい／自社製品で海外展開に挑戦したい／息子に継がせられる会社にしたい…"}
+      ],
+      // AI Prompt Template: 診断士がAIに「整理」を依頼する用
+      aiPrompt: (d) => `
+# 命令
+あなたはプロの経営コンサルタントです。以下の「社長のインタビューメモ」を読み込み、企業の「コア・コンピタンス（核心的な強み）」と「経営理念の原石」を言語化してください。
+
+# インタビューメモ
+- 企業名: ${d.company}
+- 創業経緯: ${d.history}
+- こだわり: ${d.strength}
+- 顧客の声: ${d.customer_voice}
+- 将来像: ${d.vision_raw}
+
+# 出力形式
+1. 企業の物語（創業ストーリー）
+2. 強みの源泉分析（なぜ顧客に選ばれているか）
+3. 経営理念の提案（ミッション・ビジョン・バリュー案）
+`
+    },
+    {
+      id: "swot",
+      name: "02 SWOT分析",
+      icon: "fa-shield-halved",
+      leftTitle: "環境分析 (SWOT)",
+      rightTitle: "SWOT整理シート",
+      fields: [
+        {k:"strength", t:"Strength (強み)", type:"textarea", ph:"自社の強み、資産、技術、人材、ノウハウ"},
+        {k:"weakness", t:"Weakness (弱み)", type:"textarea", ph:"自社の課題、不足リソース、苦手分野"},
+        {k:"opportunity", t:"Opportunity (機会)", type:"textarea", ph:"市場の追い風、流行、法改正、新しい技術、競合の撤退"},
+        {k:"threat", t:"Threat (脅威)", type:"textarea", ph:"市場縮小、競合の参入、原材料高騰、法規制の強化"}
+      ],
+      aiPrompt: (d) => `
+# 命令
+あなたは中小企業診断士です。以下のSWOT分析データを元に、「クロスSWOT分析」を行い、具体的な戦略オプションを提案してください。
+
+# SWOTデータ
+- 強み(S): ${d.strength}
+- 弱み(W): ${d.weakness}
+- 機会(O): ${d.opportunity}
+- 脅威(T): ${d.threat}
+
+# 出力形式
+1. 積極攻勢戦略 (S × O): 強みを活かして機会を掴む具体策
+2. 差別化戦略 (S × T): 強みで脅威を跳ね返す、または回避する策
+3. 段階的改善戦略 (W × O): 機会を逃さないために弱みを補強する策
+4. 防衛・撤退戦略 (W × T): 最悪の事態を避けるための策
+`
+    },
+    {
+      id: "kpi",
+      name: "03 数値・目標",
+      icon: "fa-chart-line",
+      leftTitle: "定量目標設定",
+      rightTitle: "経営目標シート",
+      fields: [
+        {k:"term", t:"対象期間", type:"input", ph:"例：第10期 (202X年4月〜)"},
+        {k:"sales_goal", t:"売上目標 (KGI)", type:"input", ph:"例：年商 1億円（月平均840万）"},
+        {k:"profit_goal", t:"利益目標", type:"input", ph:"例：営業利益 1,000万円"},
+        {k:"kfs", t:"KFS (重要成功要因)", type:"textarea", ph:"目標達成のカギとなる要素（例：新規商談数、リピート率向上）"},
+        {k:"kpi", t:"KPI (行動指標)", type:"textarea", ph:"現場が追いかける具体的な数字（例：月間訪問数20件、ブログ更新週1回）"},
+        {k:"action", t:"具体的アクションプラン", type:"textarea", ph:"誰が、いつ、何をやるか"}
+      ],
+      aiPrompt: (d) => `
+# 命令
+以下の経営目標データを元に、目標達成の実現可能性を高めるためのアドバイスと、KPI管理のポイントを列挙してください。
+
+# 目標データ
+- 期間: ${d.term}
+- 売上目標: ${d.sales_goal}
+- 利益目標: ${d.profit_goal}
+- KFS: ${d.kfs}
+- KPI: ${d.kpi}
+- 行動計画: ${d.action}
+
+# 出力リクエスト
+1. 目標の妥当性チェック（論理的な飛躍がないか）
+2. KPIツリーの整理（KGIを達成するためのロジック）
+3. 現場への落とし込み方のアドバイス
+`
+    },
+    {
+      id: "3c",
+      name: "04 3C分析",
+      icon: "fa-magnifying-glass",
+      leftTitle: "3C分析ボード",
+      rightTitle: "市場環境サマリー",
+      fields: [
+        {k:"customer", t:"Customer (市場・顧客)", type:"textarea", ph:"ターゲット顧客層、市場規模、顧客ニーズの変化"},
+        {k:"competitor", t:"Competitor (競合)", type:"textarea", ph:"直接競合、間接競合、競合の強み・弱み"},
+        {k:"company", t:"Company (自社)", type:"textarea", ph:"自社のリソース、ポジショニング、提供価値"},
+        {k:"key_insight", t:"KSF (市場で勝つためのカギ)", type:"textarea", ph:"顧客が競合ではなく自社を選ぶ理由は何か？"}
+      ],
+      aiPrompt: (d) => `
+# 命令
+以下の3C分析を元に、この事業の「勝ち筋（Winning Formula）」を定義してください。
+
+# 3Cデータ
+- 顧客(Customer): ${d.customer}
+- 競合(Competitor): ${d.competitor}
+- 自社(Company): ${d.company}
+- 考察(KSF): ${d.key_insight}
+
+# 出力リクエスト
+1. ターゲット顧客のペルソナ詳細化
+2. 競合に対する差別化ポイントの明確化
+3. キャッチコピー案（顧客に刺さる一言）
+`
+    },
+    {
+      id: "plan",
+      name: "05 事業計画骨子",
+      icon: "fa-road",
+      leftTitle: "事業計画ドラフト",
+      rightTitle: "事業計画書（案）",
+      fields: [
+        {k:"title", t:"事業計画タイトル", type:"input", ph:"例：〇〇を活用した新サービス展開事業"},
+        {k:"background", t:"背景・動機", type:"textarea", ph:"なぜ今やるのか？ 社会的背景や顧客の要請"},
+        {k:"service", t:"商品・サービス内容", type:"textarea", ph:"具体的になにを提供するのか（What）"},
+        {k:"target", t:"ターゲット・販路", type:"textarea", ph:"誰に、どうやって売るのか（Who & How）"},
+        {k:"schedule", t:"実施スケジュール", type:"textarea", ph:"準備期間、開始時期、マイルストーン"},
+        {k:"budget", t:"資金計画（概算）", type:"textarea", ph:"必要な資金とその調達方法"}
+      ],
+      aiPrompt: (d) => `
+# 命令
+あなたは中小企業診断士です。補助金申請（小規模事業者持続化補助金など）を想定し、以下のメモから「事業計画書の文章」を作成してください。
+
+# メモ
+- タイトル: ${d.title}
+- 背景: ${d.background}
+- 内容: ${d.service}
+- ターゲット・販路: ${d.target}
+- 日程: ${d.schedule}
+- 予算: ${d.budget}
+
+# 出力形式
+丁寧な「です・ます」調で、審査員に伝わりやすい論理構成で記述してください。
+1. 事業の概要
+2. 顧客ニーズと市場の動向
+3. 自社の強みと今回の取り組み
+4. 具体的な実施内容
+5. 期待される効果
+`
+    }
+  ];
+
+  // --- DOM Elements ---
+  const $ = (id) => document.getElementById(id);
+  const tabsEl = $("tabs");
+  const formArea = $("formArea");
+  const previewEl = $("preview");
+  const statusEl = $("status");
+  const jsonImportEl = $("jsonImport");
+  
+  // Modal Elements
+  const btnUsage = $("btnUsage");
+  const usageModal = $("usageModal");
+  const btnCloseModal = $("btnCloseModal");
+
+  let activeTabId = TAB_DEFS[0].id;
+
+  // --- Helpers ---
+  function pad(n){ return String(n).padStart(2,"0"); }
+  function nowStr(){
+    const d = new Date();
+    return `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  }
+  function tabKey(tabId){
+    return `kcPro_${tabId}`;
+  }
+  function setStatus(msg){
+    statusEl.innerHTML = `<i class="fa-solid fa-circle-info"></i> ${msg}`;
+    setTimeout(() => { statusEl.innerHTML = ""; }, 4000);
+  }
+
+  // --- Core Logic ---
+  function getTabDef(tabId){ return TAB_DEFS.find(t => t.id === tabId); }
+
+  function getCurrentData(tabId){
+    const def = getTabDef(tabId);
+    const data = { tabId, updatedAt: nowStr() };
+    for(const f of def.fields){
+      const el = document.querySelector(`[data-k="${tabId}.${f.k}"]`);
+      data[f.k] = (el?.value || "").trim();
+    }
+    return data;
+  }
+
+  function setCurrentData(tabId, data){
+    const def = getTabDef(tabId);
+    for(const f of def.fields){
+      const el = document.querySelector(`[data-k="${tabId}.${f.k}"]`);
+      if(el) el.value = data?.[f.k] ?? "";
+    }
+    renderPreview();
+  }
+
+  // --- Rendering ---
+  function renderTabs(){
+    tabsEl.innerHTML = "";
+    TAB_DEFS.forEach(def => {
+      const b = document.createElement("div");
+      b.className = "tab" + (def.id === activeTabId ? " active" : "");
+      b.innerHTML = `<i class="fa-solid ${def.icon}"></i> ${def.name}`;
+      b.addEventListener("click", () => switchTab(def.id));
+      tabsEl.appendChild(b);
+    });
+  }
+
+  function renderForm(){
+    const def = getTabDef(activeTabId);
+    $("leftTitle").textContent = def.leftTitle;
+    $("rightTitle").textContent = def.rightTitle;
+    formArea.innerHTML = "";
+
+    def.fields.forEach(f => {
+      const wrapper = document.createElement("div");
+      wrapper.className = "field-wrapper";
+      
+      const lab = document.createElement("label");
+      lab.textContent = f.t;
+      wrapper.appendChild(lab);
+
+      if(f.ph){
+        const desc = document.createElement("span");
+        desc.className = "field-desc";
+        desc.textContent = f.ph;
+        wrapper.appendChild(desc);
+      }
+
+      let el;
+      if(f.type === "input"){
+        el = document.createElement("input");
+      }else{
+        el = document.createElement("textarea");
+      }
+      el.setAttribute("data-k", `${activeTabId}.${f.k}`);
+      el.addEventListener("input", renderPreview);
+      wrapper.appendChild(el);
+      formArea.appendChild(wrapper);
+    });
+  }
+
+  function renderPreview(){
+    const def = getTabDef(activeTabId);
+    const data = getCurrentData(activeTabId);
+    
+    // Simple text generation for preview
+    const lines = [];
+    lines.push(`【${def.rightTitle}】`);
+    lines.push(`作成日: ${data.updatedAt}`);
+    lines.push("-".repeat(30));
+    
+    def.fields.forEach(f => {
+      const val = data[f.k];
+      if(val){
+        lines.push(`■ ${f.t}`);
+        lines.push(val);
+        lines.push("");
+      }
+    });
+
+    if(lines.length <= 3) lines.push("（データが入力されていません）");
+
+    previewEl.textContent = lines.join("\n");
+  }
+
+  // --- Actions ---
+  function switchTab(tabId){
+    activeTabId = tabId;
+    renderTabs();
+    renderForm();
+    loadTabSilently();
+    renderPreview();
+  }
+
+  function saveTab(){
+    const data = getCurrentData(activeTabId);
+    localStorage.setItem(tabKey(activeTabId), JSON.stringify(data));
+    setStatus(`保存完了 (${nowStr()})`);
+  }
+
+  function loadTab(){
+    const raw = localStorage.getItem(tabKey(activeTabId));
+    if(!raw){ setStatus("保存データなし"); return; }
+    try{
+      const data = JSON.parse(raw);
+      setCurrentData(activeTabId, data);
+      setStatus("読込完了");
+    }catch(e){ setStatus("データ破損エラー"); }
+  }
+
+  function loadTabSilently(){
+    const raw = localStorage.getItem(tabKey(activeTabId));
+    if(!raw) return;
+    try{
+      const data = JSON.parse(raw);
+      setCurrentData(activeTabId, data);
+    }catch(e){}
+  }
+
+  function clearTab(){
+    if(!confirm("現在のタブの入力をクリアしますか？")) return;
+    const def = getTabDef(activeTabId);
+    const empty = { tabId: activeTabId };
+    def.fields.forEach(f => empty[f.k] = "");
+    setCurrentData(activeTabId, empty);
+    setStatus("クリアしました");
+  }
+
+  // --- AI Prompt Generation ---
+  function generateAiPrompt(){
+    const def = getTabDef(activeTabId);
+    const data = getCurrentData(activeTabId);
+    
+    // Check if empty
+    const hasData = def.fields.some(f => data[f.k] && data[f.k].length > 0);
+    if(!hasData){
+      setStatus("データが空です。入力をしてください。");
+      return;
+    }
+
+    const prompt = def.aiPrompt(data);
+    navigator.clipboard.writeText(prompt.trim())
+      .then(() => setStatus("AIプロンプトをコピーしました！ChatGPT等に貼り付けてください"))
+      .catch(() => setStatus("コピーに失敗しました"));
+  }
+
+  // --- Global Save/Load ---
+  function saveAll(){
+    const all = { appId: APP_KEY_ALL, updatedAt: nowStr(), tabs:{} };
+    TAB_DEFS.forEach(def => {
+      const data = getCurrentData(def.id);
+      all.tabs[def.id] = data;
+      localStorage.setItem(tabKey(def.id), JSON.stringify(data)); // Individual sync
+    });
+    localStorage.setItem(APP_KEY_ALL, JSON.stringify(all));
+    setStatus(`全データ保存完了 (${all.updatedAt})`);
+  }
+
+  function loadAll(){
+    const raw = localStorage.getItem(APP_KEY_ALL);
+    if(!raw){ setStatus("全データ保存なし"); return; }
+    try{
+      const all = JSON.parse(raw);
+      if(all.tabs){
+        Object.keys(all.tabs).forEach(tid => {
+          localStorage.setItem(tabKey(tid), JSON.stringify(all.tabs[tid]));
+        });
+        loadTabSilently();
+        renderPreview();
+        setStatus("全データ復元完了");
+      }
+    }catch(e){ setStatus("データ読込エラー"); }
+  }
+
+  function exportAll(){
+    const all = { appId: APP_KEY_ALL, updatedAt: nowStr(), tabs:{} };
+    TAB_DEFS.forEach(def => {
+      all.tabs[def.id] = getCurrentData(def.id);
+    });
+    const json = JSON.stringify(all, null, 2);
+    jsonImportEl.value = json;
+    
+    // Auto Copy
+    navigator.clipboard.writeText(json).then(() => setStatus("JSONをコピーしました"));
+  }
+
+  function importJson(){
+    const text = jsonImportEl.value.trim();
+    if(!text) return;
+    try{
+      const obj = JSON.parse(text);
+      if(obj.tabs){
+        Object.keys(obj.tabs).forEach(tid => {
+          localStorage.setItem(tabKey(tid), JSON.stringify(obj.tabs[tid]));
+        });
+        localStorage.setItem(APP_KEY_ALL, JSON.stringify(obj));
+        loadTabSilently();
+        renderPreview();
+        setStatus("JSONから復元しました");
+      } else {
+        setStatus("形式が違います");
+      }
+    }catch(e){ setStatus("JSON解析エラー"); }
+  }
+
+  function copyPreviewText(){
+    const text = previewEl.textContent;
+    navigator.clipboard.writeText(text).then(() => setStatus("プレビュー内容をコピーしました"));
+  }
+  
+  function copyJsonText(){
+    const text = jsonImportEl.value;
+    if(!text) return;
+    navigator.clipboard.writeText(text).then(() => setStatus("JSONをコピーしました"));
+  }
+  
+  // --- Modal Logic ---
+  function openModal(){
+    usageModal.classList.add("open");
+  }
+  function closeModal(){
+    usageModal.classList.remove("open");
+  }
+  
+  // Close modal when clicking outside content
+  usageModal.addEventListener("click", (e) => {
+    if(e.target === usageModal) closeModal();
+  });
+
+  // --- Event Listeners ---
+  $("btnSaveTab").addEventListener("click", saveTab);
+  $("btnClearTab").addEventListener("click", clearTab);
+  $("btnGenAiPrompt").addEventListener("click", generateAiPrompt);
+  
+  $("btnSaveAll").addEventListener("click", saveAll);
+  $("btnLoadAll").addEventListener("click", loadAll);
+  $("btnExportAll").addEventListener("click", exportAll);
+  
+  $("btnImportJson").addEventListener("click", importJson);
+  $("btnCopyJson").addEventListener("click", copyJsonText);
+  $("btnCopyText").addEventListener("click", copyPreviewText);
+  
+  btnUsage.addEventListener("click", openModal);
+  btnCloseModal.addEventListener("click", closeModal);
+
+  // Init
+  renderTabs();
+  renderForm();
+  loadTabSilently();
+  renderPreview();
+
+  // Safety
+  window.onbeforeunload = function() {
+    // return "保存されていないデータがあるかもしれません"; 
+    // ※現代のブラウザではメッセージ表示は制限されていますが、アラートは出ます
+  };
+
+})();
+</script>
+</body>
+</html>
