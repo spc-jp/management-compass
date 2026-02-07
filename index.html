@@ -7,327 +7,271 @@
   <!-- 
      Original concept by User
      Refined for SME Consultants (中小企業診断士)
-     Theme: Premium Glass (Aurora Gradient)
+     Theme: Premium Glass (Aurora Gradient) + Dark Mode Support
+     Updated: v2.8 Added PDF Text Extraction Feature
   -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- PDF.js for text extraction -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
+  
   <style>
     :root{
-      /* プレミアム・グラス・テーマ */
-      --text-main: #1e293b;      /* 濃いネイビーグレー */
-      --text-muted: #475569;     /* 落ち着いたグレー */
-      
-      --accent: #2563eb;         /* 知的なロイヤルブルー */
+      /* --- Light Theme Variables --- */
+      --text-main: #1e293b;
+      --text-muted: #475569;
+      --accent: #2563eb;
       --accent-hover: #1d4ed8;
       
-      --glass-bg: rgba(255, 255, 255, 0.75); /* グラス効果のベース */
-      --glass-border: rgba(255, 255, 255, 0.6); /* ガラスの縁 */
-      --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15); /* 高級感のある影 */
+      --glass-bg: rgba(255, 255, 255, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.6);
+      --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
       
-      --ai-color: #7c3aed;       /* 高貴な紫 */
-      --danger: #ef4444;         /* 赤 */
+      --card-bg: rgba(255, 255, 255, 0.6);
+      --input-bg: rgba(255, 255, 255, 0.6);
+      --input-focus-bg: #ffffff;
+      --preview-bg: #ffffff;
+      --preview-text: #334155;
       
-      --input-bg: rgba(255, 255, 255, 0.6); /* 入力欄も半透明 */
+      --danger: #ef4444;
+      --warning: #f59e0b;
+      --success: #10b981;
+      
+      --bg-color: #f8fafc;
+      --grad-1: rgba(199, 210, 254, 0.5);
+      --grad-2: rgba(221, 214, 254, 0.5);
+      --grad-3: rgba(186, 230, 253, 0.5);
+      --grad-4: rgba(254, 202, 202, 0.2);
+    }
+
+    /* --- Dark Theme Variables --- */
+    [data-theme="dark"] {
+      --text-main: #f1f5f9;
+      --text-muted: #94a3b8;
+      --accent: #60a5fa;
+      --accent-hover: #3b82f6;
+      
+      --glass-bg: rgba(30, 41, 59, 0.75);
+      --glass-border: rgba(255, 255, 255, 0.1);
+      --glass-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+      
+      --card-bg: rgba(30, 41, 59, 0.4);
+      --input-bg: rgba(15, 23, 42, 0.5);
+      --input-focus-bg: rgba(15, 23, 42, 0.8);
+      --preview-bg: #1e293b;
+      --preview-text: #e2e8f0;
+      
+      --bg-color: #0f172a;
+      --grad-1: rgba(56, 189, 248, 0.15);
+      --grad-2: rgba(129, 140, 248, 0.15);
+      --grad-3: rgba(192, 132, 252, 0.15);
+      --grad-4: rgba(248, 113, 113, 0.1);
     }
 
     body{
       margin:0; color:var(--text-main);
       font-family: "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif;
-      /* オーロラグラデーション背景 */
-      background-color: #f3f4f6;
+      background-color: var(--bg-color);
       background-image: 
-        radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), 
-        radial-gradient(at 50% 0%, hsla(225,39%,30%,1) 0, transparent 50%), 
-        radial-gradient(at 100% 0%, hsla(339,49%,30%,1) 0, transparent 50%);
-      background: 
-        radial-gradient(at 0% 0%, rgba(199, 210, 254, 0.5) 0px, transparent 50%),
-        radial-gradient(at 100% 0%, rgba(221, 214, 254, 0.5) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(186, 230, 253, 0.5) 0px, transparent 50%),
-        radial-gradient(at 0% 100%, rgba(254, 202, 202, 0.2) 0px, transparent 50%),
-        #f8fafc; /* ベースカラー */
-      background-attachment: fixed;
+        radial-gradient(at 0% 0%, var(--grad-1) 0px, transparent 50%),
+        radial-gradient(at 100% 0%, var(--grad-2) 0px, transparent 50%),
+        radial-gradient(at 100% 100%, var(--grad-3) 0px, transparent 50%),
+        radial-gradient(at 0% 100%, var(--grad-4) 0px, transparent 50%);
+      background-attachment: fixed; background-size: cover;
       min-height:100vh;
       -webkit-font-smoothing: antialiased;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
     .wrap{max-width:1200px; margin:0 auto; padding:24px 20px 60px;}
     
-    /* Header Area (Glass) */
+    /* Header */
     .top{
-      background: var(--glass-bg);
-      backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
-      border: 1px solid var(--glass-border);
-      border-radius:16px; padding:20px 28px;
+      background: var(--glass-bg); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--glass-border); border-radius:16px; padding:20px 28px;
       display:flex; gap:16px; align-items:center; justify-content:space-between; flex-wrap:wrap;
-      box-shadow: var(--glass-shadow);
-      margin-bottom: 24px;
+      box-shadow: var(--glass-shadow); margin-bottom: 24px; transition: background 0.3s, border-color 0.3s;
     }
     .ttl-area h1{
-      margin:0; font-size:22px; letter-spacing:.03em; font-weight:700; color:#1e293b;
+      margin:0; font-size:22px; letter-spacing:.03em; font-weight:700; color:var(--text-main);
       display: flex; align-items: center; gap: 10px;
-      text-shadow: 0 1px 2px rgba(255,255,255,0.8);
+      text-shadow: 0 1px 2px rgba(255,255,255,0.1);
     }
     .ttl-area h1 i { 
       color: var(--accent); 
       background: -webkit-linear-gradient(45deg, #2563eb, #7c3aed);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
     }
     .ttl-area p{margin:4px 0 0; color:var(--text-muted); font-size:13px; font-weight:500;}
-    .rightTop{display:flex; gap:10px; flex-wrap:wrap;}
+    
+    .rightTop{ display:flex; gap:10px; flex-wrap:wrap; align-items:center; margin-left: auto; }
+    .separator { width: 1px; height: 24px; background: var(--text-muted); opacity: 0.3; margin: 0 8px; }
 
     /* Tabs */
-    .tabs{
-      display:flex; gap:8px; overflow-x:auto; padding-bottom:8px;
-      margin-bottom: 20px;
-      padding-left: 4px; /* scroll padding */
-    }
+    .tabs{ display:flex; gap:8px; overflow-x:auto; padding-bottom:8px; margin-bottom: 20px; padding-left: 4px; }
     .tabs::-webkit-scrollbar{height:4px;}
-    .tabs::-webkit-scrollbar-thumb{background:rgba(0,0,0,0.1); border-radius:2px;}
+    .tabs::-webkit-scrollbar-thumb{background:rgba(100,100,100,0.2); border-radius:2px;}
     
     .tab{
       cursor:pointer; white-space:nowrap;
-      background: rgba(255, 255, 255, 0.4);
-      border: 1px solid rgba(255, 255, 255, 0.4);
-      color:var(--text-muted);
-      padding:10px 20px; border-radius:30px; /* Pill shape */
+      background: var(--card-bg); border: 1px solid var(--glass-border); color:var(--text-muted);
+      padding:10px 20px; border-radius:30px;
       font-size:14px; font-weight:600; transition:all 0.3s;
       display: flex; align-items: center; gap: 8px;
       box-shadow: 0 2px 4px rgba(0,0,0,0.03);
     }
-    .tab:hover{
-      background: rgba(255, 255, 255, 0.8); 
-      transform: translateY(-1px);
-      color: var(--accent);
-    }
-    .tab.active{
-      background: linear-gradient(135deg, var(--accent), #4f46e5);
-      border-color: transparent;
-      color:#fff;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-    }
-    .tab i { font-size: 1.1em; }
+    .tab:hover{ background: rgba(255, 255, 255, 0.2); transform: translateY(-1px); color: var(--accent); border-color: var(--accent); }
+    .tab.active{ background: linear-gradient(135deg, var(--accent), #4f46e5); border-color: transparent; color:#fff; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3); }
 
-    /* Main Panel */
-    .panel{
-      animation: fadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
+    /* Layout */
+    .panel{ animation: fadeIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1); }
     @keyframes fadeIn { from{opacity:0; transform:translateY(10px);} to{opacity:1; transform:translateY(0);} }
-
     .grid{display:grid; grid-template-columns:1fr 1fr; gap:24px;}
     @media (max-width:900px){ .grid{grid-template-columns:1fr;} }
 
-    /* Card (Glass) */
     .card{
-      background: var(--glass-bg);
-      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
-      border: 1px solid var(--glass-border);
-      border-radius:16px; padding:28px;
-      box-shadow: var(--glass-shadow);
-      display:flex; flex-direction:column;
-      position: relative;
-      overflow: hidden;
+      background: var(--glass-bg); backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--glass-border); border-radius:16px; padding:28px;
+      box-shadow: var(--glass-shadow); display:flex; flex-direction:column;
+      position: relative; overflow: hidden; transition: background 0.3s, border-color 0.3s;
     }
-    /* Subtle gloss reflection on top */
-    .card::before {
-      content: ""; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
-    }
-
-    .card-header{
-      display:flex; justify-content:space-between; align-items:center; margin-bottom:24px;
-      padding-bottom: 16px; border-bottom: 1px solid rgba(0,0,0,0.06);
-    }
-    .cardTitle{
-      margin:0; font-size:17px; font-weight:700; color:var(--text-main);
-      display:flex; align-items:center; gap:10px;
-    }
-    .cardTitle i { color: #64748b; }
+    .card-header{ display:flex; justify-content:space-between; align-items:center; margin-bottom:24px; padding-bottom: 16px; border-bottom: 1px solid var(--glass-border); }
+    .cardTitle{ margin:0; font-size:17px; font-weight:700; color:var(--text-main); display:flex; align-items:center; gap:10px; }
+    .cardTitle i { color: var(--text-muted); opacity:0.8; }
     
-    /* Forms */
     .field-wrapper { margin-bottom: 24px; }
-    label{
-      display:block; font-size:13px; color:#334155; 
-      margin:0 0 8px; font-weight:700;
-      letter-spacing: 0.02em;
-    }
-    .field-desc{
-      font-size:12px; color:#64748b; margin-bottom:10px; display:block; line-height: 1.5;
-    }
+    label{ display:block; font-size:13px; color:var(--text-main); opacity: 0.9; margin:0 0 8px; font-weight:700; letter-spacing: 0.02em; }
+    .field-desc{ font-size:12px; color:var(--text-muted); margin-bottom:10px; display:block; line-height: 1.5; }
     
     input, textarea{
-      width:100%; box-sizing:border-box;
-      background: var(--input-bg);
-      border:1px solid rgba(0,0,0,0.1);
-      color:var(--text-main); border-radius:8px;
-      padding:14px 16px; font-size:15px;
-      outline:none; transition:all 0.3s;
-      font-family:inherit;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
+      width:100%; box-sizing:border-box; background: var(--input-bg);
+      border:1px solid var(--glass-border); color:var(--text-main); border-radius:8px;
+      padding:14px 16px; font-size:15px; outline:none; transition:all 0.3s;
+      font-family:inherit; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02);
     }
-    input:focus, textarea:focus{
-      border-color:var(--accent); background:#fff; 
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
-    }
-    input::placeholder, textarea::placeholder { color: #94a3b8; }
+    input:focus, textarea:focus{ border-color:var(--accent); background:var(--input-focus-bg); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15); }
     textarea{min-height:130px; resize:vertical; line-height:1.7;}
 
-    /* Output/Preview Area */
     .out-wrap{flex:1; display:flex; flex-direction:column;}
     .out{
-      flex:1; white-space:pre-wrap;
-      background: #ffffff; 
-      border: 1px solid rgba(0,0,0,0.05);
-      color: #334155;
-      border-radius:8px;
-      padding:28px;
-      font-size:14px; line-height:1.9;
-      overflow-y:auto; max-height:600px;
-      /* Paper shadow */
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      flex:1; white-space:pre-wrap; background: var(--preview-bg); 
+      border: 1px solid var(--glass-border); color: var(--preview-text);
+      border-radius:8px; padding:28px; font-size:14px; line-height:1.9;
+      overflow-y:auto; max-height:600px; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+      transition: background 0.3s, color 0.3s;
     }
 
     /* Buttons */
     .btns{display:flex; gap:12px; flex-wrap:wrap; margin-top:24px;}
     button{
-      border:1px solid rgba(0,0,0,0.1);
-      background: rgba(255,255,255,0.8);
-      color:#475569;
-      padding:11px 20px;
-      border-radius:8px;
-      cursor:pointer;
-      font-size:13px; font-weight:700;
-      display:inline-flex; align-items:center; gap:8px;
-      transition:all 0.2s;
-      box-shadow: 0 2px 4px rgba(0,0,0,0.03);
+      border:1px solid var(--glass-border); background: rgba(255,255,255,0.8);
+      color:#475569; padding:11px 20px; border-radius:8px; cursor:pointer;
+      font-size:13px; font-weight:700; display:inline-flex; align-items:center; gap:8px;
+      transition:all 0.2s; box-shadow: 0 2px 4px rgba(0,0,0,0.03);
     }
-    button:hover{
-      background:#fff; color:#1e293b; 
-      transform: translateY(-1px);
-      box-shadow: 0 4px 8px rgba(0,0,0,0.06);
-    }
-    button:active{transform:translateY(0); box-shadow:none;}
+    [data-theme="dark"] button { background: rgba(30, 41, 59, 0.8); color: #cbd5e1; border-color: rgba(255,255,255,0.1); }
+    button:hover{ background:#fff; color:var(--accent); transform: translateY(-1px); box-shadow: 0 4px 8px rgba(0,0,0,0.06); }
+    [data-theme="dark"] button:hover { background: #334155; color: #fff; }
     
-    button.primary{
-      background: linear-gradient(135deg, var(--accent), #3b82f6);
-      border:none; color:#fff;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-    }
-    button.primary:hover{
-      background: linear-gradient(135deg, #1d4ed8, #2563eb);
-      color:#fff;
-      box-shadow: 0 6px 16px rgba(37, 99, 235, 0.35);
-    }
+    button.primary{ background: linear-gradient(135deg, var(--accent), #3b82f6); border:none; color:#fff !important; box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25); }
+    button.primary:hover{ background: linear-gradient(135deg, #1d4ed8, #2563eb); color:#fff; }
     
-    button.ai-btn{
-      background: linear-gradient(135deg, #7c3aed, #9333ea);
-      border:none; color:#fff;
-      box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25);
-    }
-    button.ai-btn:hover{
-      background: linear-gradient(135deg, #6d28d9, #7c3aed);
-      color:#fff;
-    }
+    button.ai-btn{ background: linear-gradient(135deg, #7c3aed, #9333ea); border:none; color:#fff !important; box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25); }
+    button.ai-btn:hover{ background: linear-gradient(135deg, #6d28d9, #7c3aed); color:#fff; }
+    
+    button.pdf-btn{ background: #fff; color: #dc2626; border: 1px solid #fee2e2; }
+    button.pdf-btn:hover{ background: #fef2f2; border-color: #fecaca; color: #b91c1c; }
+    [data-theme="dark"] button.pdf-btn { background: rgba(220, 38, 38, 0.1); color: #fca5a5; border-color: rgba(220, 38, 38, 0.3); }
 
     button.danger{border-color: #fecaca; color:var(--danger); background: #fff5f5;}
+    [data-theme="dark"] button.danger { background: rgba(239, 68, 68, 0.1); color: #fca5a5; border-color: rgba(239, 68, 68, 0.3); }
     button.danger:hover{background:#fee2e2; color:#b91c1c;}
-
-    /* Modal Styles */
-    .modal-overlay {
-      display: none;
-      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-      background: rgba(0, 0, 0, 0.3);
-      backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
-      z-index: 9999;
-      justify-content: center; align-items: center;
-      opacity: 0; transition: opacity 0.3s ease;
-    }
-    .modal-overlay.open {
-      display: flex; opacity: 1;
-    }
-    .modal-content {
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.8);
-      width: 90%; max-width: 600px;
-      border-radius: 16px;
-      padding: 32px;
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-      position: relative;
-      transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-    }
-    .modal-overlay.open .modal-content {
-      transform: translateY(0);
-    }
-    .modal-close {
-      position: absolute; top: 16px; right: 20px;
-      font-size: 24px; color: #94a3b8; cursor: pointer;
-      background: none; border: none; padding: 0; box-shadow: none;
-    }
-    .modal-close:hover { background: none; color: var(--danger); box-shadow: none; transform: none; }
+    [data-theme="dark"] button.danger:hover { background: rgba(239, 68, 68, 0.2); color: #fff; }
     
+    /* Double Click Safety Style */
+    button.confirming {
+      background: var(--warning) !important; color: #fff !important; border-color: transparent !important;
+      animation: pulse 0.5s;
+    }
+    @keyframes pulse { 0%{transform:scale(1);} 50%{transform:scale(1.05);} 100%{transform:scale(1);} }
+
+    /* Toast */
+    .toast-container { position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); z-index: 10000; pointer-events: none; }
+    .toast {
+      background: rgba(30, 41, 59, 0.95); color: #fff; padding: 12px 24px; border-radius: 50px;
+      font-size: 14px; font-weight: 500; box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+      display: flex; align-items: center; gap: 10px;
+      opacity: 0; transform: translateY(20px); transition: all 0.3s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+    }
+    [data-theme="dark"] .toast { background: rgba(255, 255, 255, 0.9); color: #0f172a; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast i { color: #4ade80; } .toast.error i { color: #f87171; }
+
+    /* Modal */
+    .modal-overlay {
+      display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.3); backdrop-filter: blur(4px); z-index: 9999;
+      justify-content: center; align-items: center; opacity: 0; transition: opacity 0.3s ease;
+    }
+    .modal-overlay.open { display: flex; opacity: 1; }
+    .modal-content {
+      background: var(--glass-bg); backdrop-filter: blur(20px); -webkit-backdrop-filter: blur(20px);
+      border: 1px solid var(--glass-border); width: 90%; max-width: 550px;
+      border-radius: 16px; padding: 32px; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+      position: relative; transform: translateY(20px); transition: transform 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+      color: var(--text-main);
+    }
+    [data-theme="dark"] .modal-content { background: rgba(30, 41, 59, 0.95); }
+    .modal-overlay.open .modal-content { transform: translateY(0); }
+    .modal-close {
+      position: absolute; top: 16px; right: 20px; font-size: 24px; color: var(--text-muted); cursor: pointer; background:none; border:none;
+    }
+    .modal-close:hover { color: var(--danger); }
     .modal-title {
       font-size: 20px; font-weight: 700; color: var(--text-main);
-      margin-bottom: 20px; border-bottom: 1px solid #e2e8f0; padding-bottom: 12px;
+      margin-bottom: 20px; border-bottom: 1px solid var(--glass-border); padding-bottom: 12px;
       display: flex; align-items: center; gap: 10px;
     }
-    .modal-body p { margin: 0 0 16px; font-size: 14px; line-height: 1.7; color: var(--text-muted); }
+    .usage-list { margin: 0; padding-left: 20px; }
+    .usage-list li { margin-bottom: 10px; color: var(--text-muted); line-height: 1.6; font-size: 14px; }
+    .usage-h { font-size: 15px; font-weight: 700; color: var(--accent); margin-top: 20px; margin-bottom: 10px; display: block; }
+
+    .settings-row { margin-bottom: 24px; }
+    .settings-label { font-weight: bold; margin-bottom: 10px; display: block; font-size: 14px; }
+    .theme-opts { display: flex; gap: 10px; }
+    .theme-btn {
+      flex: 1; padding: 10px; border: 1px solid var(--glass-border); border-radius: 8px;
+      background: rgba(255,255,255,0.1); color: var(--text-muted); cursor: pointer;
+      text-align: center; font-size: 13px;
+    }
+    .theme-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
     
-    .usage-steps {
-      background: #f8fafc; border-radius: 12px; padding: 20px; margin-top: 16px;
-      border: 1px solid #f1f5f9;
+    .settings-footer {
+      margin-top: 40px; border-top: 1px dashed var(--glass-border); padding-top: 20px;
+      display: flex; justify-content: space-between; align-items: center; gap: 10px;
     }
-    .step-item {
-      display: flex; gap: 14px; margin-bottom: 16px;
+    .btn-link {
+      background: rgba(0,0,0,0.03); border: 1px solid var(--glass-border);
+      color: var(--text-muted); padding: 8px 16px; border-radius: 6px;
+      font-size: 12px; cursor: pointer; text-decoration: none;
+      transition: all 0.2s; display: inline-flex; align-items: center; gap: 6px;
     }
-    .step-item:last-child { margin-bottom: 0; }
-    .step-num {
-      background: var(--accent); color: #fff; width: 28px; height: 28px;
-      border-radius: 50%; display: flex; align-items: center; justify-content: center;
-      font-size: 14px; font-weight: bold; flex-shrink: 0; margin-top: 2px;
-      box-shadow: 0 2px 4px rgba(37, 99, 235, 0.3);
-    }
-    .step-text h4 { margin: 0 0 4px; font-size: 15px; color: var(--text-main); }
-    .step-text p { margin: 0; font-size: 13px; color: var(--text-muted); }
+    [data-theme="dark"] .btn-link { background: rgba(255,255,255,0.05); }
+    .btn-link:hover { background: rgba(0,0,0,0.06); color: var(--text-main); transform: translateY(-1px); }
+    .btn-link.demo { color: var(--accent); border-color: var(--accent); background: rgba(37, 99, 235, 0.05); }
+    .btn-link.reset { color: var(--danger); }
+    
+    .footer{ margin-top:40px; text-align:center; color:var(--text-muted); opacity:0.7; font-size:12px; }
 
-    /* Utility */
-    .status{
-      font-size:13px; color:var(--accent); margin-top:16px; height:1.6em; font-weight:600;
-      display:flex; align-items:center; gap:8px;
-    }
-    .footer{
-      margin-top:40px; text-align:center;
-      color:#94a3b8; font-size:12px; font-weight:500;
-    }
-    .json-area{
-      margin-top:30px; border-top:1px dashed rgba(0,0,0,0.1); padding-top:20px;
-    }
-    .jsonBox{
-      min-height:80px; font-family:monospace; font-size:12px; 
-      background: #f8fafc; color: #64748b;
-      border: 1px solid rgba(0,0,0,0.05);
-    }
-
-    /* --- PRINT STYLES --- */
     @media print {
       body{background:#fff; color:#000; -webkit-print-color-adjust: exact; background-image: none;}
-      .top, .tabs, #leftCard, .btns, .json-area, .footer, .rightTop button {display:none !important;}
+      .top, .tabs, #leftCard, .btns, .footer, .rightTop button, #toastContainer, .modal-overlay {display:none !important;}
       .wrap{max-width:100%; padding:0; margin:0;}
       .panel{margin:0; border:none; background:none; animation:none;}
       .grid{display:block;}
-      .card{
-        border:none; background:none; padding:0; box-shadow:none; 
-        backdrop-filter:none; border-radius:0;
-      }
+      .card{border:none; background:none; padding:0; box-shadow:none; backdrop-filter:none; border-radius:0; color:#000;}
       .card-header{border-bottom:none; margin-bottom:10px;}
       .cardTitle{color:#000; font-size:18px;}
-      .out{
-        border:none; padding:0; margin:0; 
-        color:#000; background:transparent; 
-        box-shadow:none; max-height:none;
-        font-family: "Hiragino Mincho ProN", "Yu Mincho", serif;
-      }
-      #preview::before {
-        content: "経営コンパス レポート";
-        display:block; font-size:24px; font-weight:bold; margin-bottom:20px; border-bottom:2px solid #000; padding-bottom:10px;
-      }
+      .out{border:none; padding:0; margin:0; color:#000; background:transparent; box-shadow:none; max-height:none;}
+      #preview::before { content: "経営コンパス レポート"; display:block; font-size:24px; font-weight:bold; margin-bottom:20px; border-bottom:2px solid #000; padding-bottom:10px; }
     }
   </style>
 </head>
@@ -341,100 +285,91 @@
       <p>診断士・経営者のための思考整理 & AI共創ツール</p>
     </div>
     <div class="rightTop">
-      <button id="btnUsage"><i class="fa-solid fa-circle-question"></i> 使い方</button>
       <button onclick="window.print()"><i class="fa-solid fa-print"></i> 印刷/PDF</button>
-      <button class="primary" id="btnSaveAll"><i class="fa-solid fa-save"></i> 全保存</button>
-      <button id="btnLoadAll"><i class="fa-solid fa-rotate-right"></i> 全読込</button>
-      <button id="btnExportAll"><i class="fa-solid fa-file-export"></i> JSON出力</button>
+      <button id="btnUploadJson"><i class="fa-solid fa-upload"></i> データ読込</button>
+      <button class="primary" id="btnDownloadJson"><i class="fa-solid fa-download"></i> データ保存</button>
+      <div class="separator"></div>
+      <button id="btnUsage"><i class="fa-solid fa-circle-question"></i> 使い方</button>
+      <button id="btnSettings"><i class="fa-solid fa-gear"></i> 設定</button>
+      <input type="file" id="fileInput" accept=".json" style="display:none">
+      <input type="file" id="pdfInput" accept="application/pdf" style="display:none">
     </div>
   </div>
 
   <!-- Tabs -->
   <div class="tabs" id="tabs"></div>
 
-  <!-- Main Area -->
+  <!-- Main Panel -->
   <div class="panel" id="panel">
     <div class="grid">
-      
-      <!-- Input Column -->
       <div class="card" id="leftCard">
         <div class="card-header">
           <p class="cardTitle"><i class="fa-solid fa-pen-to-square"></i> <span id="leftTitle">入力</span></p>
-          <button class="danger" id="btnClearTab" style="padding:6px 12px; font-size:11px;">クリア</button>
+          <div style="display:flex; gap:8px;">
+            <button class="pdf-btn" id="btnLoadPdf" style="padding:6px 12px; font-size:11px;"><i class="fa-regular fa-file-pdf"></i> PDF読込</button>
+            <button class="danger" id="btnClearTab" style="padding:6px 12px; font-size:11px;">クリア</button>
+          </div>
         </div>
         <div id="formArea"></div>
-        
         <div class="btns">
           <button class="primary" id="btnSaveTab">一時保存</button>
           <button class="ai-btn" id="btnGenAiPrompt"><i class="fa-solid fa-robot"></i> AI分析プロンプト作成</button>
         </div>
-        <div class="status" id="status"></div>
       </div>
-
-      <!-- Preview Column -->
       <div class="card" id="rightCard">
         <div class="card-header">
           <p class="cardTitle"><i class="fa-solid fa-file-lines"></i> <span id="rightTitle">プレビュー</span></p>
           <button id="btnCopyText" style="padding:6px 12px; font-size:11px;"><i class="fa-regular fa-copy"></i> テキストコピー</button>
         </div>
-        
-        <div class="out-wrap">
-          <div class="out" id="preview"></div>
-        </div>
-
-        <!-- Import Area -->
-        <div class="json-area">
-          <label style="margin-bottom:8px;"><i class="fa-solid fa-code"></i> データ復元（JSON貼付）</label>
-          <textarea id="jsonImport" class="jsonBox" placeholder='書き出したJSONデータをここに貼り付けて「復元」を押してください'></textarea>
-          <div class="btns">
-            <button id="btnImportJson">復元実行</button>
-            <button id="btnCopyJson">JSONをコピー</button>
-          </div>
-        </div>
+        <div class="out-wrap"><div class="out" id="preview"></div></div>
       </div>
-
     </div>
   </div>
 
-  <div class="footer">
-    <p>Tips: 「AI分析プロンプト作成」を押すと、入力内容を元にChatGPT等への指示文を生成してクリップボードにコピーします。</p>
+  <div class="footer">テスト版（ベータ版） © 2026 SPC</div>
+</div>
+
+<div class="toast-container" id="toastContainer"></div>
+
+<!-- Usage Modal -->
+<div class="modal-overlay" id="usageModal">
+  <div class="modal-content">
+    <button class="modal-close" id="btnCloseUsage"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-title"><i class="fa-solid fa-circle-question"></i> 目的・使い方</div>
+    <div class="modal-body">
+      <span class="usage-h">目的</span>
+      <p style="font-size:14px; color:var(--text-muted); margin-bottom:20px;">
+        本ツールは、経営者や診断士の「想い」や「戦略」を言語化し、AIを活用して高品質な事業計画書や分析資料を効率的に作成する支援ツールです。
+      </p>
+      <span class="usage-h">使い方</span>
+      <ul class="usage-list">
+        <li><strong>タブを選択：</strong> 分析したいフレームワークを選びます。</li>
+        <li><strong>PDF読込：</strong> 「PDF読込」ボタンから資料（会社案内など）を読み込むと、自動でテキスト化して一番下の欄に追記されます。</li>
+        <li><strong>入力・保存：</strong> 各項目に入力し、「一時保存」ボタンで保存します。</li>
+        <li><strong>AIプロンプト作成：</strong> 分析用プロンプトを生成し、ChatGPT等に活用します。</li>
+      </ul>
+    </div>
   </div>
 </div>
 
-<!-- Modal -->
-<div class="modal-overlay" id="usageModal">
-  <div class="modal-content">
-    <button class="modal-close" id="btnCloseModal"><i class="fa-solid fa-xmark"></i></button>
-    <div class="modal-title"><i class="fa-solid fa-compass"></i> 経営コンパス Pro の使い方</div>
+<!-- Settings Modal -->
+<div class="modal-overlay" id="settingsModal">
+  <div class="modal-content" style="max-width:400px;">
+    <button class="modal-close" id="btnCloseSettings"><i class="fa-solid fa-xmark"></i></button>
+    <div class="modal-title"><i class="fa-solid fa-gear"></i> 設定</div>
     <div class="modal-body">
-      <p>
-        このアプリは、経営者や診断士の頭の中にある<strong>「想い」や「戦略」を整理</strong>し、
-        AI（ChatGPTなど）を活用して<strong>爆速で資料化</strong>するためのツールです。
-      </p>
-      
-      <div class="usage-steps">
-        <div class="step-item">
-          <div class="step-num">1</div>
-          <div class="step-text">
-            <h4>入力する</h4>
-            <p>画面上のタブ（想い・SWOT・3Cなど）を選び、左側の質問に答える形式でメモを入力します。</p>
-          </div>
-        </div>
-        <div class="step-item">
-          <div class="step-num">2</div>
-          <div class="step-text">
-            <h4>AIで深掘りする</h4>
-            <p>「AI分析プロンプト作成」ボタンを押して、ChatGPT等に貼り付けてください。プロの視点で分析・整理してくれます。</p>
-          </div>
-        </div>
-        <div class="step-item">
-          <div class="step-num">3</div>
-          <div class="step-text">
-            <h4>保存・出力する</h4>
-            <p>右側のプレビューを確認し、「印刷/PDF」で資料として保存したり、テキストをコピーして提案書に使えます。</p>
-          </div>
+      <div class="settings-row">
+        <span class="settings-label">カラーテーマ</span>
+        <div class="theme-opts">
+          <div class="theme-btn active" id="themeLight" onclick="setTheme('light')"><i class="fa-regular fa-sun"></i> ライト</div>
+          <div class="theme-btn" id="themeDark" onclick="setTheme('dark')"><i class="fa-regular fa-moon"></i> ダーク</div>
         </div>
       </div>
+      <div class="settings-footer">
+        <button class="btn-link demo" id="btnLoadDemo"><i class="fa-solid fa-wand-magic-sparkles"></i> デモデータ読込</button>
+        <button class="btn-link reset" id="btnClearAllData"><i class="fa-solid fa-trash-can"></i> 全データクリア</button>
+      </div>
+      <p style="font-size:11px; color:var(--text-muted); margin-top:10px; text-align:right;">※ボタンを2回押すと実行されます</p>
     </div>
   </div>
 </div>
@@ -442,461 +377,392 @@
 <script>
 (() => {
   const APP_KEY_ALL = "keieiCompassPro_v2";
+  const APP_THEME_KEY = "keieiCompassPro_theme";
+  
+  // Set worker for PDF.js
+  if(window.pdfjsLib){
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.worker.min.js';
+  }
 
-  // --- 定義：タブとフィールド ---
-  // SME Diagnostician (中小企業診断士) 向けの視点でフィールドを微調整
+  // --- Definitions ---
   const TAB_DEFS = [
     {
-      id: "omoi",
-      name: "01 想い・原点",
-      icon: "fa-heart",
-      leftTitle: "社長の想い・原点",
-      rightTitle: "ヒアリングシート",
+      id: "omoi", name: "00 想い・原点", icon: "fa-heart", leftTitle: "社長の想い・原点", rightTitle: "ヒアリングシート",
       fields: [
         {k:"company", t:"企業名・屋号", type:"input", ph:"例：株式会社〇〇製作所"},
         {k:"owner", t:"代表者名", type:"input", ph:"例：山田 太郎"},
-        {k:"history", t:"創業の経緯・歴史", type:"textarea", ph:"例：先代の急逝で突然継ぐことになり、当初は資金繰りに苦労したが…／元々エンジニアだったが、既存製品への不満から「もっと良いものを」と自分で作ったのが始まり…"},
-        {k:"strength", t:"こだわり・強み（ご自身の言葉で）", type:"textarea", ph:"例：大手にはできない小回りの利く対応／職歴30年のベテランによる手作業の仕上げ／「NOと言わない」現場力／地域密着で顔の見える関係性…"},
-        {k:"customer_voice", t:"顧客から言われて嬉しかった言葉", type:"textarea", ph:"例：「〇〇さんに頼めば安心だ」「他で断られたけど、ここなら何とかしてくれた」「急な納期だったけど助かったよ」「孫の代までよろしく」…"},
-        {k:"vision_raw", t:"将来の夢・ありたい姿（漠然としていてOK）", type:"textarea", ph:"例：地元で一番愛される店になりたい／従業員が家を買えるくらい給料を上げたい／自社製品で海外展開に挑戦したい／息子に継がせられる会社にしたい…"}
+        {k:"history", t:"創業の経緯・歴史", type:"textarea", ph:"例：先代の急逝で突然継ぐことになり…"},
+        {k:"strength", t:"こだわり・強み", type:"textarea", ph:"例：大手にはできない小回りの利く対応…"},
+        {k:"customer_voice", t:"顧客の声", type:"textarea", ph:"例：「〇〇さんに頼めば安心だ」…"},
+        {k:"vision_raw", t:"将来の夢", type:"textarea", ph:"例：地元で一番愛される店になりたい…"}
       ],
-      // AI Prompt Template: 診断士がAIに「整理」を依頼する用
-      aiPrompt: (d) => `
-# 命令
-あなたはプロの経営コンサルタントです。以下の「社長のインタビューメモ」を読み込み、企業の「コア・コンピタンス（核心的な強み）」と「経営理念の原石」を言語化してください。
-
-# インタビューメモ
-- 企業名: ${d.company}
-- 創業経緯: ${d.history}
-- こだわり: ${d.strength}
-- 顧客の声: ${d.customer_voice}
-- 将来像: ${d.vision_raw}
-
-# 出力形式
-1. 企業の物語（創業ストーリー）
-2. 強みの源泉分析（なぜ顧客に選ばれているか）
-3. 経営理念の提案（ミッション・ビジョン・バリュー案）
-`
+      aiPrompt: (d) => `あなたはプロの経営コンサルタントです。以下の「社長のインタビューメモ」を読み込み、企業の「コア・コンピタンス」と「経営理念の原石」を言語化してください。\n\n[メモ]\n企業名:${d.company}\n経緯:${d.history}\nこだわり:${d.strength}\n顧客の声:${d.customer_voice}\n将来像:${d.vision_raw}`
     },
     {
-      id: "swot",
-      name: "02 SWOT分析",
-      icon: "fa-shield-halved",
-      leftTitle: "環境分析 (SWOT)",
-      rightTitle: "SWOT整理シート",
+      id: "pest", name: "01 PEST分析", icon: "fa-earth-asia", leftTitle: "マクロ環境分析 (PEST)", rightTitle: "PEST分析シート",
       fields: [
-        {k:"strength", t:"Strength (強み)", type:"textarea", ph:"自社の強み、資産、技術、人材、ノウハウ"},
-        {k:"weakness", t:"Weakness (弱み)", type:"textarea", ph:"自社の課題、不足リソース、苦手分野"},
-        {k:"opportunity", t:"Opportunity (機会)", type:"textarea", ph:"市場の追い風、流行、法改正、新しい技術、競合の撤退"},
-        {k:"threat", t:"Threat (脅威)", type:"textarea", ph:"市場縮小、競合の参入、原材料高騰、法規制の強化"}
+        {k:"politics", t:"Politics (政治・法律)", type:"textarea"}, {k:"economy", t:"Economy (経済)", type:"textarea"},
+        {k:"society", t:"Society (社会)", type:"textarea"}, {k:"technology", t:"Technology (技術)", type:"textarea"}
       ],
-      aiPrompt: (d) => `
-# 命令
-あなたは中小企業診断士です。以下のSWOT分析データを元に、「クロスSWOT分析」を行い、具体的な戦略オプションを提案してください。
-
-# SWOTデータ
-- 強み(S): ${d.strength}
-- 弱み(W): ${d.weakness}
-- 機会(O): ${d.opportunity}
-- 脅威(T): ${d.threat}
-
-# 出力形式
-1. 積極攻勢戦略 (S × O): 強みを活かして機会を掴む具体策
-2. 差別化戦略 (S × T): 強みで脅威を跳ね返す、または回避する策
-3. 段階的改善戦略 (W × O): 機会を逃さないために弱みを補強する策
-4. 防衛・撤退戦略 (W × T): 最悪の事態を避けるための策
-`
+      aiPrompt: (d) => `あなたは中小企業診断士です。以下のPEST分析から、この業界の「重要な機会」と「避けるべき脅威」を抽出してください。\n\nP:${d.politics}\nE:${d.economy}\nS:${d.society}\nT:${d.technology}`
     },
     {
-      id: "kpi",
-      name: "03 数値・目標",
-      icon: "fa-chart-line",
-      leftTitle: "定量目標設定",
-      rightTitle: "経営目標シート",
+      id: "3c", name: "02 3C分析", icon: "fa-magnifying-glass", leftTitle: "3C分析ボード", rightTitle: "市場環境サマリー",
       fields: [
-        {k:"term", t:"対象期間", type:"input", ph:"例：第10期 (202X年4月〜)"},
-        {k:"sales_goal", t:"売上目標 (KGI)", type:"input", ph:"例：年商 1億円（月平均840万）"},
-        {k:"profit_goal", t:"利益目標", type:"input", ph:"例：営業利益 1,000万円"},
-        {k:"kfs", t:"KFS (重要成功要因)", type:"textarea", ph:"目標達成のカギとなる要素（例：新規商談数、リピート率向上）"},
-        {k:"kpi", t:"KPI (行動指標)", type:"textarea", ph:"現場が追いかける具体的な数字（例：月間訪問数20件、ブログ更新週1回）"},
-        {k:"action", t:"具体的アクションプラン", type:"textarea", ph:"誰が、いつ、何をやるか"}
+        {k:"customer", t:"Customer (市場・顧客)", type:"textarea"}, {k:"competitor", t:"Competitor (競合)", type:"textarea"},
+        {k:"company", t:"Company (自社)", type:"textarea"}, {k:"key_insight", t:"KSF (勝ち筋)", type:"textarea"}
       ],
-      aiPrompt: (d) => `
-# 命令
-以下の経営目標データを元に、目標達成の実現可能性を高めるためのアドバイスと、KPI管理のポイントを列挙してください。
-
-# 目標データ
-- 期間: ${d.term}
-- 売上目標: ${d.sales_goal}
-- 利益目標: ${d.profit_goal}
-- KFS: ${d.kfs}
-- KPI: ${d.kpi}
-- 行動計画: ${d.action}
-
-# 出力リクエスト
-1. 目標の妥当性チェック（論理的な飛躍がないか）
-2. KPIツリーの整理（KGIを達成するためのロジック）
-3. 現場への落とし込み方のアドバイス
-`
+      aiPrompt: (d) => `以下の3C分析を元に、この事業の「勝ち筋（KSF）」を定義してください。\n\n顧客:${d.customer}\n競合:${d.competitor}\n自社:${d.company}\nKSF:${d.key_insight}`
     },
     {
-      id: "3c",
-      name: "04 3C分析",
-      icon: "fa-magnifying-glass",
-      leftTitle: "3C分析ボード",
-      rightTitle: "市場環境サマリー",
+      id: "swot", name: "03 SWOT分析", icon: "fa-shield-halved", leftTitle: "環境分析 (SWOT)", rightTitle: "SWOT整理シート",
       fields: [
-        {k:"customer", t:"Customer (市場・顧客)", type:"textarea", ph:"ターゲット顧客層、市場規模、顧客ニーズの変化"},
-        {k:"competitor", t:"Competitor (競合)", type:"textarea", ph:"直接競合、間接競合、競合の強み・弱み"},
-        {k:"company", t:"Company (自社)", type:"textarea", ph:"自社のリソース、ポジショニング、提供価値"},
-        {k:"key_insight", t:"KSF (市場で勝つためのカギ)", type:"textarea", ph:"顧客が競合ではなく自社を選ぶ理由は何か？"}
+        {k:"strength", t:"Strength (強み)", type:"textarea"}, {k:"weakness", t:"Weakness (弱み)", type:"textarea"},
+        {k:"opportunity", t:"Opportunity (機会)", type:"textarea"}, {k:"threat", t:"Threat (脅威)", type:"textarea"}
       ],
-      aiPrompt: (d) => `
-# 命令
-以下の3C分析を元に、この事業の「勝ち筋（Winning Formula）」を定義してください。
-
-# 3Cデータ
-- 顧客(Customer): ${d.customer}
-- 競合(Competitor): ${d.competitor}
-- 自社(Company): ${d.company}
-- 考察(KSF): ${d.key_insight}
-
-# 出力リクエスト
-1. ターゲット顧客のペルソナ詳細化
-2. 競合に対する差別化ポイントの明確化
-3. キャッチコピー案（顧客に刺さる一言）
-`
+      aiPrompt: (d) => `あなたは中小企業診断士です。SWOT分析から「クロスSWOT分析」を行い、戦略オプションを提案してください。\n\nS:${d.strength}\nW:${d.weakness}\nO:${d.opportunity}\nT:${d.threat}`
     },
     {
-      id: "plan",
-      name: "05 事業計画骨子",
-      icon: "fa-road",
-      leftTitle: "事業計画ドラフト",
-      rightTitle: "事業計画書（案）",
+      id: "4p", name: "04 4P施策", icon: "fa-shop", leftTitle: "マーケティング・ミックス (4P)", rightTitle: "4P施策シート",
       fields: [
-        {k:"title", t:"事業計画タイトル", type:"input", ph:"例：〇〇を活用した新サービス展開事業"},
-        {k:"background", t:"背景・動機", type:"textarea", ph:"なぜ今やるのか？ 社会的背景や顧客の要請"},
-        {k:"service", t:"商品・サービス内容", type:"textarea", ph:"具体的になにを提供するのか（What）"},
-        {k:"target", t:"ターゲット・販路", type:"textarea", ph:"誰に、どうやって売るのか（Who & How）"},
-        {k:"schedule", t:"実施スケジュール", type:"textarea", ph:"準備期間、開始時期、マイルストーン"},
-        {k:"budget", t:"資金計画（概算）", type:"textarea", ph:"必要な資金とその調達方法"}
+        {k:"product", t:"Product (製品)", type:"textarea"}, {k:"price", t:"Price (価格)", type:"textarea"},
+        {k:"place", t:"Place (流通)", type:"textarea"}, {k:"promotion", t:"Promotion (販促)", type:"textarea"}
       ],
-      aiPrompt: (d) => `
-# 命令
-あなたは中小企業診断士です。補助金申請（小規模事業者持続化補助金など）を想定し、以下のメモから「事業計画書の文章」を作成してください。
-
-# メモ
-- タイトル: ${d.title}
-- 背景: ${d.background}
-- 内容: ${d.service}
-- ターゲット・販路: ${d.target}
-- 日程: ${d.schedule}
-- 予算: ${d.budget}
-
-# 出力形式
-丁寧な「です・ます」調で、審査員に伝わりやすい論理構成で記述してください。
-1. 事業の概要
-2. 顧客ニーズと市場の動向
-3. 自社の強みと今回の取り組み
-4. 具体的な実施内容
-5. 期待される効果
-`
+      aiPrompt: (d) => `あなたはマーケティングのプロです。4P情報を整理し、一貫性を診断してください。\n\nProd:${d.product}\nPrice:${d.price}\nPlace:${d.place}\nProm:${d.promotion}`
+    },
+    {
+      id: "kpi", name: "05 数値・目標", icon: "fa-chart-line", leftTitle: "定量目標設定", rightTitle: "経営目標シート",
+      fields: [
+        {k:"term", t:"対象期間", type:"input"}, {k:"sales_goal", t:"売上目標", type:"input"}, {k:"profit_goal", t:"利益目標", type:"input"},
+        {k:"kpi", t:"KPI", type:"textarea"}, {k:"action", t:"アクションプラン", type:"textarea"}
+      ],
+      aiPrompt: (d) => `以下の目標データを元に、KPIツリーとアクションプランを具体化してください。\n\n期間:${d.term}\n売上:${d.sales_goal}\n利益:${d.profit_goal}\nKPI:${d.kpi}\n行動:${d.action}`
+    },
+    {
+      id: "plan", name: "06 事業計画骨子", icon: "fa-road", leftTitle: "事業計画ドラフト", rightTitle: "事業計画書（案）",
+      fields: [
+        {k:"title", t:"事業計画タイトル", type:"input"}, {k:"background", t:"背景・動機", type:"textarea"},
+        {k:"service", t:"商品・サービス内容", type:"textarea"}, {k:"target", t:"ターゲット・販路", type:"textarea"},
+        {k:"schedule", t:"実施スケジュール", type:"textarea"}, {k:"budget", t:"資金計画（概算）", type:"textarea"}
+      ],
+      aiPrompt: (d) => `中小企業診断士として、以下のメモから補助金申請用の「事業計画書」の文章を作成してください。\n\nタイトル:${d.title}\n背景:${d.background}\n内容:${d.service}\nターゲット:${d.target}\n日程:${d.schedule}\n予算:${d.budget}`
     }
   ];
 
-  // --- DOM Elements ---
+  // --- DOM & Helpers ---
   const $ = (id) => document.getElementById(id);
-  const tabsEl = $("tabs");
-  const formArea = $("formArea");
-  const previewEl = $("preview");
-  const statusEl = $("status");
-  const jsonImportEl = $("jsonImport");
-  
-  // Modal Elements
-  const btnUsage = $("btnUsage");
-  const usageModal = $("usageModal");
-  const btnCloseModal = $("btnCloseModal");
+  const tabsEl = $("tabs"), formArea = $("formArea"), previewEl = $("preview");
+  const toastContainer = $("toastContainer"), fileInput = $("fileInput"), pdfInput = $("pdfInput");
+  const btnUsage = $("btnUsage"), usageModal = $("usageModal"), btnCloseUsage = $("btnCloseUsage");
+  const btnSettings = $("btnSettings"), settingsModal = $("settingsModal"), btnCloseSettings = $("btnCloseSettings");
 
   let activeTabId = TAB_DEFS[0].id;
-
-  // --- Helpers ---
   function pad(n){ return String(n).padStart(2,"0"); }
-  function nowStr(){
-    const d = new Date();
-    return `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
-  }
-  function tabKey(tabId){
-    return `kcPro_${tabId}`;
-  }
-  function setStatus(msg){
-    statusEl.innerHTML = `<i class="fa-solid fa-circle-info"></i> ${msg}`;
-    setTimeout(() => { statusEl.innerHTML = ""; }, 4000);
+  function nowStr(){ const d=new Date(); return `${d.getFullYear()}/${pad(d.getMonth()+1)}/${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`; }
+  function dateFileStr(){ const d=new Date(); return `${d.getFullYear()}${pad(d.getMonth()+1)}${pad(d.getDate())}_${pad(d.getHours())}${pad(d.getMinutes())}`; }
+  function tabKey(tabId){ return `kcPro_${tabId}`; }
+  function showToast(msg, isError=false){
+    const div = document.createElement("div"); div.className = `toast ${isError?"error":""}`;
+    div.innerHTML = `<i class="fa-solid ${isError?"fa-circle-exclamation":"fa-circle-check"}"></i> <span>${msg}</span>`;
+    toastContainer.appendChild(div);
+    requestAnimationFrame(()=>div.classList.add("show"));
+    setTimeout(()=>{ div.classList.remove("show"); setTimeout(()=>div.remove(), 400); }, 3000);
   }
 
-  // --- Core Logic ---
-  function getTabDef(tabId){ return TAB_DEFS.find(t => t.id === tabId); }
-
-  function getCurrentData(tabId){
-    const def = getTabDef(tabId);
-    const data = { tabId, updatedAt: nowStr() };
-    for(const f of def.fields){
-      const el = document.querySelector(`[data-k="${tabId}.${f.k}"]`);
-      data[f.k] = (el?.value || "").trim();
+  // --- Clipboard Helper (Fallback for iframe/restricted env) ---
+  async function copyToClipboard(text) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return true;
+    } catch (err) {
+      try {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        textArea.style.position = "fixed";
+        textArea.style.left = "-9999px";
+        textArea.style.top = "0";
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+        const successful = document.execCommand('copy');
+        document.body.removeChild(textArea);
+        return successful;
+      } catch (err2) {
+        console.error("Copy failed", err2);
+        return false;
+      }
     }
-    return data;
   }
 
-  function setCurrentData(tabId, data){
-    const def = getTabDef(tabId);
-    for(const f of def.fields){
-      const el = document.querySelector(`[data-k="${tabId}.${f.k}"]`);
-      if(el) el.value = data?.[f.k] ?? "";
-    }
-    renderPreview();
+  // --- Safety Click Mechanism (Replaces native confirm) ---
+  function attachSafetyClick(btnId, actionFn, warningText){
+    const btn = $(btnId);
+    let clickCount = 0;
+    let timeout;
+    const originalContent = btn.innerHTML; // Store Icon + Text
+
+    btn.addEventListener("click", () => {
+      if(clickCount === 0){
+        clickCount = 1;
+        btn.innerHTML = warningText || "実行しますか？";
+        btn.classList.add("confirming");
+        
+        // Reset after 3 seconds
+        timeout = setTimeout(() => {
+          clickCount = 0;
+          btn.innerHTML = originalContent;
+          btn.classList.remove("confirming");
+        }, 3000);
+      } else {
+        // Second Click
+        clearTimeout(timeout);
+        clickCount = 0;
+        btn.innerHTML = originalContent;
+        btn.classList.remove("confirming");
+        actionFn();
+      }
+    });
   }
 
-  // --- Rendering ---
+  // --- Logic ---
+  window.setTheme = function(mode){
+    if(mode==='dark'){ document.body.setAttribute('data-theme','dark'); $("themeDark").classList.add("active"); $("themeLight").classList.remove("active"); }
+    else{ document.body.removeAttribute('data-theme'); $("themeLight").classList.add("active"); $("themeDark").classList.remove("active"); }
+    localStorage.setItem(APP_THEME_KEY, mode);
+  }
+  function initTheme(){ const s = localStorage.getItem(APP_THEME_KEY); setTheme(s==='dark'?'dark':'light'); }
+
+  function getTabDef(id){ return TAB_DEFS.find(t=>t.id===id); }
+  function getCurrentData(id){
+    const def = getTabDef(id); const d = {tabId:id, updatedAt:nowStr()};
+    def.fields.forEach(f=>{ const el=document.querySelector(`[data-k="${id}.${f.k}"]`); d[f.k]=(el?.value||"").trim(); });
+    return d;
+  }
+  function setCurrentData(id, d){
+    const def = getTabDef(id);
+    def.fields.forEach(f=>{ const el=document.querySelector(`[data-k="${id}.${f.k}"]`); if(el) el.value=d?.[f.k]??""; });
+  }
   function renderTabs(){
-    tabsEl.innerHTML = "";
-    TAB_DEFS.forEach(def => {
-      const b = document.createElement("div");
-      b.className = "tab" + (def.id === activeTabId ? " active" : "");
-      b.innerHTML = `<i class="fa-solid ${def.icon}"></i> ${def.name}`;
-      b.addEventListener("click", () => switchTab(def.id));
+    tabsEl.innerHTML=""; TAB_DEFS.forEach(def=>{
+      const b=document.createElement("div"); b.className="tab"+(def.id===activeTabId?" active":"");
+      b.innerHTML=`<i class="fa-solid ${def.icon}"></i> ${def.name}`;
+      b.addEventListener("click",()=>{ activeTabId=def.id; renderTabs(); renderForm(); loadTabSilently(); renderPreview(); });
       tabsEl.appendChild(b);
     });
   }
-
   function renderForm(){
-    const def = getTabDef(activeTabId);
-    $("leftTitle").textContent = def.leftTitle;
-    $("rightTitle").textContent = def.rightTitle;
-    formArea.innerHTML = "";
-
-    def.fields.forEach(f => {
-      const wrapper = document.createElement("div");
-      wrapper.className = "field-wrapper";
-      
-      const lab = document.createElement("label");
-      lab.textContent = f.t;
-      wrapper.appendChild(lab);
-
-      if(f.ph){
-        const desc = document.createElement("span");
-        desc.className = "field-desc";
-        desc.textContent = f.ph;
-        wrapper.appendChild(desc);
-      }
-
-      let el;
-      if(f.type === "input"){
-        el = document.createElement("input");
-      }else{
-        el = document.createElement("textarea");
-      }
-      el.setAttribute("data-k", `${activeTabId}.${f.k}`);
-      el.addEventListener("input", renderPreview);
-      wrapper.appendChild(el);
-      formArea.appendChild(wrapper);
+    const def = getTabDef(activeTabId); $("leftTitle").textContent=def.leftTitle; $("rightTitle").textContent=def.rightTitle; formArea.innerHTML="";
+    def.fields.forEach(f=>{
+      const w=document.createElement("div"); w.className="field-wrapper";
+      const l=document.createElement("label"); l.textContent=f.t; w.appendChild(l);
+      if(f.ph){ const d=document.createElement("span"); d.className="field-desc"; d.textContent=f.ph; w.appendChild(d); }
+      const el=document.createElement(f.type==="input"?"input":"textarea");
+      el.setAttribute("data-k", `${activeTabId}.${f.k}`); el.addEventListener("input", renderPreview);
+      w.appendChild(el); formArea.appendChild(w);
     });
   }
-
   function renderPreview(){
-    const def = getTabDef(activeTabId);
-    const data = getCurrentData(activeTabId);
-    
-    // Simple text generation for preview
-    const lines = [];
-    lines.push(`【${def.rightTitle}】`);
-    lines.push(`作成日: ${data.updatedAt}`);
-    lines.push("-".repeat(30));
-    
-    def.fields.forEach(f => {
-      const val = data[f.k];
-      if(val){
-        lines.push(`■ ${f.t}`);
-        lines.push(val);
-        lines.push("");
-      }
-    });
-
-    if(lines.length <= 3) lines.push("（データが入力されていません）");
-
-    previewEl.textContent = lines.join("\n");
+    const def = getTabDef(activeTabId), d = getCurrentData(activeTabId);
+    const l = [`【${def.rightTitle}】`, `作成日: ${d.updatedAt}`, "-".repeat(30)];
+    def.fields.forEach(f=>{ if(d[f.k]){ l.push(`■ ${f.t}`); l.push(d[f.k]); l.push(""); } });
+    if(l.length<=3) l.push("（未入力）");
+    previewEl.textContent = l.join("\n");
   }
-
-  // --- Actions ---
-  function switchTab(tabId){
-    activeTabId = tabId;
-    renderTabs();
-    renderForm();
-    loadTabSilently();
-    renderPreview();
+  function loadTabSilently(){ 
+    const r=localStorage.getItem(tabKey(activeTabId)); 
+    if(r) setCurrentData(activeTabId, JSON.parse(r)); 
+    // Always call renderPreview to update the right side, even if empty
+    renderPreview(); 
   }
-
-  function saveTab(){
-    const data = getCurrentData(activeTabId);
-    localStorage.setItem(tabKey(activeTabId), JSON.stringify(data));
-    setStatus(`保存完了 (${nowStr()})`);
-  }
-
-  function loadTab(){
-    const raw = localStorage.getItem(tabKey(activeTabId));
-    if(!raw){ setStatus("保存データなし"); return; }
-    try{
-      const data = JSON.parse(raw);
-      setCurrentData(activeTabId, data);
-      setStatus("読込完了");
-    }catch(e){ setStatus("データ破損エラー"); }
-  }
-
-  function loadTabSilently(){
-    const raw = localStorage.getItem(tabKey(activeTabId));
-    if(!raw) return;
-    try{
-      const data = JSON.parse(raw);
-      setCurrentData(activeTabId, data);
-    }catch(e){}
-  }
-
-  function clearTab(){
-    if(!confirm("現在のタブの入力をクリアしますか？")) return;
-    const def = getTabDef(activeTabId);
-    const empty = { tabId: activeTabId };
-    def.fields.forEach(f => empty[f.k] = "");
-    setCurrentData(activeTabId, empty);
-    setStatus("クリアしました");
-  }
-
-  // --- AI Prompt Generation ---
+  function saveTab(){ localStorage.setItem(tabKey(activeTabId), JSON.stringify(getCurrentData(activeTabId))); showToast("保存しました"); }
+  
   function generateAiPrompt(){
-    const def = getTabDef(activeTabId);
-    const data = getCurrentData(activeTabId);
+    const d=getCurrentData(activeTabId), def=getTabDef(activeTabId);
+    if(!def.fields.some(f=>d[f.k])) return showToast("データが空です",true);
     
-    // Check if empty
-    const hasData = def.fields.some(f => data[f.k] && data[f.k].length > 0);
-    if(!hasData){
-      setStatus("データが空です。入力をしてください。");
+    copyToClipboard(def.aiPrompt(d)).then(ok => {
+      if(ok) showToast("プロンプトをコピーしました");
+      else showToast("コピー失敗: 手動でコピーしてください", true);
+    });
+  }
+  
+  // Modals
+  function openUsage(){ usageModal.classList.add("open"); } function closeUsage(){ usageModal.classList.remove("open"); }
+  function openSettings(){ settingsModal.classList.add("open"); } function closeSettings(){ settingsModal.classList.remove("open"); }
+  window.onclick = (e) => { if(e.target==usageModal)closeUsage(); if(e.target==settingsModal)closeSettings(); };
+  btnUsage.addEventListener("click", openUsage); btnCloseUsage.addEventListener("click", closeUsage);
+  btnSettings.addEventListener("click", openSettings); btnCloseSettings.addEventListener("click", closeSettings);
+
+  // --- PDF Text Extraction ---
+  $("btnLoadPdf").addEventListener("click", () => pdfInput.click());
+  
+  pdfInput.addEventListener("change", async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    if (file.type !== "application/pdf") {
+      showToast("PDFファイルを選択してください", true);
       return;
     }
 
-    const prompt = def.aiPrompt(data);
-    navigator.clipboard.writeText(prompt.trim())
-      .then(() => setStatus("AIプロンプトをコピーしました！ChatGPT等に貼り付けてください"))
-      .catch(() => setStatus("コピーに失敗しました"));
-  }
+    showToast("PDFを解析中...");
 
-  // --- Global Save/Load ---
-  function saveAll(){
-    const all = { appId: APP_KEY_ALL, updatedAt: nowStr(), tabs:{} };
-    TAB_DEFS.forEach(def => {
-      const data = getCurrentData(def.id);
-      all.tabs[def.id] = data;
-      localStorage.setItem(tabKey(def.id), JSON.stringify(data)); // Individual sync
-    });
-    localStorage.setItem(APP_KEY_ALL, JSON.stringify(all));
-    setStatus(`全データ保存完了 (${all.updatedAt})`);
-  }
-
-  function loadAll(){
-    const raw = localStorage.getItem(APP_KEY_ALL);
-    if(!raw){ setStatus("全データ保存なし"); return; }
-    try{
-      const all = JSON.parse(raw);
-      if(all.tabs){
-        Object.keys(all.tabs).forEach(tid => {
-          localStorage.setItem(tabKey(tid), JSON.stringify(all.tabs[tid]));
-        });
-        loadTabSilently();
-        renderPreview();
-        setStatus("全データ復元完了");
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      
+      let fullText = "";
+      
+      for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const textContent = await page.getTextContent();
+        const pageText = textContent.items.map(item => item.str).join(" ");
+        fullText += `--- Page ${i} ---\n${pageText}\n\n`;
       }
-    }catch(e){ setStatus("データ読込エラー"); }
-  }
 
-  function exportAll(){
-    const all = { appId: APP_KEY_ALL, updatedAt: nowStr(), tabs:{} };
-    TAB_DEFS.forEach(def => {
-      all.tabs[def.id] = getCurrentData(def.id);
-    });
-    const json = JSON.stringify(all, null, 2);
-    jsonImportEl.value = json;
-    
-    // Auto Copy
-    navigator.clipboard.writeText(json).then(() => setStatus("JSONをコピーしました"));
-  }
-
-  function importJson(){
-    const text = jsonImportEl.value.trim();
-    if(!text) return;
-    try{
-      const obj = JSON.parse(text);
-      if(obj.tabs){
-        Object.keys(obj.tabs).forEach(tid => {
-          localStorage.setItem(tabKey(tid), JSON.stringify(obj.tabs[tid]));
-        });
-        localStorage.setItem(APP_KEY_ALL, JSON.stringify(obj));
-        loadTabSilently();
-        renderPreview();
-        setStatus("JSONから復元しました");
+      // Append extracted text to the LAST field of the current tab
+      const def = getTabDef(activeTabId);
+      const lastFieldKey = def.fields[def.fields.length - 1].k;
+      const el = document.querySelector(`[data-k="${activeTabId}.${lastFieldKey}"]`);
+      
+      if(el) {
+        const originalVal = el.value;
+        el.value = (originalVal ? originalVal + "\n\n" : "") + "【PDF抽出データ】\n" + fullText;
+        // Trigger input event to update preview
+        el.dispatchEvent(new Event('input'));
+        showToast("一番下の欄にPDFを追記しました！");
       } else {
-        setStatus("形式が違います");
+        showToast("追記先が見つかりませんでした", true);
       }
-    }catch(e){ setStatus("JSON解析エラー"); }
-  }
 
-  function copyPreviewText(){
-    const text = previewEl.textContent;
-    navigator.clipboard.writeText(text).then(() => setStatus("プレビュー内容をコピーしました"));
-  }
-  
-  function copyJsonText(){
-    const text = jsonImportEl.value;
-    if(!text) return;
-    navigator.clipboard.writeText(text).then(() => setStatus("JSONをコピーしました"));
-  }
-  
-  // --- Modal Logic ---
-  function openModal(){
-    usageModal.classList.add("open");
-  }
-  function closeModal(){
-    usageModal.classList.remove("open");
-  }
-  
-  // Close modal when clicking outside content
-  usageModal.addEventListener("click", (e) => {
-    if(e.target === usageModal) closeModal();
+    } catch (err) {
+      console.error(err);
+      showToast("PDFの読込に失敗しました", true);
+    }
+    
+    // Reset input
+    e.target.value = "";
   });
 
-  // --- Event Listeners ---
+  // --- Actions with Safety Click ---
+  
+  // 1. Clear Tab
+  attachSafetyClick("btnClearTab", () => {
+    const def=getTabDef(activeTabId); 
+    def.fields.forEach(f=>{ const el=document.querySelector(`[data-k="${activeTabId}.${f.k}"]`); if(el) el.value=""; }); 
+    renderPreview(); showToast("クリアしました");
+  }, "消去しますか？");
+
+  // 2. Clear All Data
+  attachSafetyClick("btnClearAllData", () => {
+    localStorage.clear(); location.reload();
+  }, "本当に削除？");
+
+  // 3. Load Demo Data
+  attachSafetyClick("btnLoadDemo", () => {
+    try {
+      showToast("読込中...");
+      const demo = {
+        omoi: {
+          company: "株式会社 鶴亀堂", owner: "鈴木 一郎",
+          history: "創業明治30年。地域で愛される和菓子屋として続いてきたが、近年はコンビニスイーツ等の台頭で売上が低迷。",
+          strength: "熟練職人の技術、添加物を使わない製法、地元産素材へのこだわり。",
+          customer_voice: "「やっぱりここの大福じゃないと」「孫にも食べさせたい安心の味」",
+          vision_raw: "和菓子の伝統を守りつつ、若い世代にも愛される新しい和菓子文化を創りたい。"
+        },
+        pest: {
+          politics: "食品衛生法の改正厳格化。インバウンド観光促進策による地方への誘客。",
+          economy: "原材料費の高騰。物価高による買い控え。",
+          society: "健康志向の高まり（グルテンフリー、低糖質）。SNS映えするスイーツの流行。",
+          technology: "冷凍技術の進化による生菓子の通販可能化。SNSマーケティングの普及。"
+        },
+        "3c": {
+          customer: "30-40代の健康志向の女性。ギフト需要。インバウンド観光客。",
+          competitor: "大手コンビニスイーツ（利便性・安さ）、近隣の洋菓子店（映え）、老舗競合（ブランド力）。",
+          company: "歴史と伝統、職人技術、無添加、店舗のレトロな雰囲気。",
+          key_insight: "「レトロモダン」をテーマに、本物の味とSNS映えを両立させた『ネオ和菓子』で差別化する。"
+        },
+        swot: {
+          strength: "100年の歴史、職人技術、固定客の存在。",
+          weakness: "高齢化による後継者不足、Web発信力の弱さ、店舗の老朽化。",
+          opportunity: "レトロブーム、和食の世界的認知、通販需要。",
+          threat: "原料高、和菓子離れ、後継者不在による廃業。"
+        },
+        "4p": {
+          product: "フルーツ大福、低糖質どら焼き、モダンなパッケージの羊羹。",
+          price: "コンビニより高いが百貨店より安い中価格帯（自分へのご褒美）。",
+          place: "本店のリニューアル、自社ECサイト、ポップアップストア。",
+          promotion: "Instagramでの映え写真投稿、インフルエンサー活用、製造工程の動画配信。"
+        },
+        kpi: {
+          term: "第125期 (2026年度)", sales_goal: "年商 8,000万円（対前年比+20%）", profit_goal: "営業利益 800万円",
+          kpi: "新規客数: 月300人、Instagramフォロワー: 5,000人、EC売上比率: 20%",
+          action: "毎月新作の開発、週3回のSNS更新、ECサイトのオープン（6月）。"
+        },
+        plan: {
+          title: "伝統×革新：若年層向け『ネオ和菓子』ブランド立ち上げ事業",
+          background: "和菓子需要の縮小と原材料高騰への対抗策として、新たな客層の獲得が急務。",
+          service: "見た目はモダン、味は本物の新ブランド展開。テイクアウト強化。",
+          target: "20-40代女性、観光客。SNS利用者。",
+          schedule: "4月:商品開発、5月:店舗改装・EC構築、6月:新装オープン。",
+          budget: "総額500万円（改装費300万、HP制作100万、広告宣伝100万）。"
+        }
+      };
+
+      // Save demo data to localStorage
+      TAB_DEFS.forEach(def => {
+        const d = demo[def.id] || {};
+        def.fields.forEach(f => { if(!d[f.k]) d[f.k] = `(デモ) ${f.t}のサンプル`; });
+        d.updatedAt = nowStr(); d.tabId = def.id;
+        localStorage.setItem(tabKey(def.id), JSON.stringify(d));
+      });
+
+      // Refresh UI Logic
+      closeSettings(); 
+      // Important: Reload current tab data immediately
+      loadTabSilently(); 
+      showToast("デモデータを読み込みました！");
+      
+    } catch(e) { console.error(e); showToast("読込エラー", true); }
+  }, "読込しますか？");
+
+
+  // --- File I/O ---
+  $("btnDownloadJson").addEventListener("click", () => {
+    const all = { appId: APP_KEY_ALL, updatedAt: nowStr(), tabs:{} };
+    TAB_DEFS.forEach(def => {
+      if(def.id === activeTabId) all.tabs[def.id] = getCurrentData(def.id);
+      else { const r = localStorage.getItem(tabKey(def.id)); all.tabs[def.id] = r ? JSON.parse(r) : null; }
+    });
+    const blob = new Blob([JSON.stringify(all,null,2)], {type:"application/json"});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download=`KC_${dateFileStr()}.json`;
+    document.body.appendChild(a); a.click(); document.body.removeChild(a); showToast("保存しました");
+  });
+  $("btnUploadJson").addEventListener("click", ()=>fileInput.click());
+  fileInput.addEventListener("change", (e)=>{
+    const f=e.target.files[0]; if(!f)return;
+    const r=new FileReader(); r.onload=(ev)=>{
+      try{
+        const o=JSON.parse(ev.target.result);
+        if(o.tabs){ Object.keys(o.tabs).forEach(k=>{ if(o.tabs[k]) localStorage.setItem(tabKey(k),JSON.stringify(o.tabs[k])); });
+        loadTabSilently(); renderPreview(); showToast("復元しました"); }
+        else showToast("形式エラー",true);
+      }catch(e){ showToast("読込エラー",true); }
+    }; r.readAsText(f); e.target.value="";
+  });
+
   $("btnSaveTab").addEventListener("click", saveTab);
-  $("btnClearTab").addEventListener("click", clearTab);
   $("btnGenAiPrompt").addEventListener("click", generateAiPrompt);
   
-  $("btnSaveAll").addEventListener("click", saveAll);
-  $("btnLoadAll").addEventListener("click", loadAll);
-  $("btnExportAll").addEventListener("click", exportAll);
-  
-  $("btnImportJson").addEventListener("click", importJson);
-  $("btnCopyJson").addEventListener("click", copyJsonText);
-  $("btnCopyText").addEventListener("click", copyPreviewText);
-  
-  btnUsage.addEventListener("click", openModal);
-  btnCloseModal.addEventListener("click", closeModal);
+  $("btnCopyText").addEventListener("click", ()=>{ 
+    copyToClipboard(previewEl.textContent).then(ok => {
+      if(ok) showToast("コピーしました");
+      else showToast("コピー失敗", true);
+    });
+  });
 
   // Init
-  renderTabs();
-  renderForm();
-  loadTabSilently();
-  renderPreview();
-
-  // Safety
-  window.onbeforeunload = function() {
-    // return "保存されていないデータがあるかもしれません"; 
-    // ※現代のブラウザではメッセージ表示は制限されていますが、アラートは出ます
-  };
-
+  initTheme(); renderTabs(); renderForm(); loadTabSilently(); renderPreview();
 })();
 </script>
 </body>
