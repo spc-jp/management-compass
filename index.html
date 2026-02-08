@@ -4,12 +4,17 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>経営コンパス Pro｜診断士・経営者向け思考整理</title>
+  
   <!-- 
      Original concept by User
      Refined for SME Consultants (中小企業診断士)
      Theme: Premium Glass (Aurora Gradient) + Dark Mode Support
-     Updated: v4.8 Final Polish: Enhanced AI Prompts for "Professional Grade" Output
+     Updated: v4.9 Added Custom Favicon (Insta-style Compass Icon)
   -->
+  
+  <!-- Favicon: Generated from user's image concept (Purple Gradient Compass) -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHZpZXdCb3g9IjAgMCA2NCA2NCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZGVmcz48bGluZWFyR3JhZGllbnQgaWQ9ImciIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjNGY0NmU1Ii8+PHN0b3Agb2Zmc2V0PSI1MCUiIHN0b3AtY29sb3I9IiNhODU1ZjciLz48c3RvcCBvZmZzZXQ9IjEwMCUiIHN0b3AtY29sb3I9IiNlYzQ4OTkiLz48L2xpbmVhckdyYWRpZW50PjwvZGVmcz48cmVjdCB4PSIwIiB5PSIwIiB3aWR0aD0iNjQiIGhlaWdodD0iNjQiIHJ4PSIxNiIgZmlsbD0idXJsKCNnKSIvPjxwYXRoIGQ9Ik0zMiAxNmw2IDEwIDEwIDYtMTAgNi02IDEwLTYtMTAtMTAtNiAxMC02eiIgZmlsbD0iI2ZmZiIvPjxjaXJjbGUgY3g9IjMyIiBjeT0iMzIiIHI9IjIiIGZpbGw9InVybCgjZykiLz48L3N2Zz4=">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.4.120/pdf.min.js"></script>
   
@@ -157,7 +162,7 @@
       font-family:inherit; box-shadow: 0 2px 5px rgba(0,0,0,0.02);
     }
     input:focus, textarea:focus{ border-color: #c13584; background:var(--input-focus-bg); box-shadow: 0 0 0 4px rgba(193, 53, 132, 0.1); }
-    input::placeholder, textarea::placeholder { color: var(--text-muted); opacity: 0.5; font-size: 13px; }
+    input::placeholder, textarea::placeholder { color: #94a3b8; opacity: 1; font-size: 13px; letter-spacing: 0.01em; }
     textarea{min-height:140px; resize:vertical; line-height:1.7;}
 
     /* View Switcher */
@@ -334,6 +339,7 @@
         <div id="formArea"></div>
         <div class="btns">
           <button class="primary" id="btnSaveTab">一時保存</button>
+          <!-- Updated Label -->
           <button class="ai-btn" id="btnGenAiPrompt"><i class="fa-solid fa-robot"></i> プロンプト作成 (コピー)</button>
         </div>
       </div>
